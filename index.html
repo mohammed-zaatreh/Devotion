@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓 — Architect of Intelligent Worlds</title>
+
+<!-- Google Fonts: Cinzel + Cormorant Garamond -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<style>
+/* ============================================
+   CSS VARIABLES — The color palette of the sky
+   ============================================ */
+:root {
+  --sky-blue: #a8d8ea;
+  --deep-sky: #1a3a5c;
+  --gold: #c9a84c;
+  --gold-light: #f0d080;
+  --emerald: #2d8a6e;
+  --teal: #4ecdc4;
+  --cloud-white: #f5f0e8;
+  --stone: #6b7c8d;
+  --fog: rgba(168, 216, 234, 0.15);
+  --glass: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(201, 168, 76, 0.3);
+  --text-primary: #e8dfc8;
+  --text-dim: rgba(232, 223, 200, 0.6);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles this */
+}
+
+body {
+  background: #0a1628;
+  color: var(--text-primary);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+  cursor: none; /* Custom cursor */
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  mix-blend-mode: screen;
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/* ============================================
+   CANVAS — The living sky background
+   ============================================ */
+#sky-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   SCROLLABLE WRAPPER
+   ============================================ */
+#scroll-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(10,22,40,0.8), transparent);
+  backdrop-filter: blur(2px);
+}
+
+.nav-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--gold-light);
+}
+
+/* ============================================
+   SECTION BASE
+   ============================================ */
+section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ============================================
+   SECTION 1 — ARRIVAL (HERO)
+   ============================================ */
+#arrival {
+  min-height: 100vh;
+  flex-direction: column;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+/* Floating island silhouette drawn with CSS */
+.island-silhouette {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 200px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* Large distant island shapes */
+.island-left {
+  position: absolute;
+  bottom: 20%;
+  left: 5%;
+  width: 250px;
+  height: 100px;
+  background: radial-gradient(ellipse at 50% 100%, #1a3a5c 0%, transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.island-right {
+  position: absolute;
+  bottom: 30%;
+  right: 8%;
+  width: 180px;
+  height: 80px;
+  background: radial-gradient(ellipse at 50% 100%, #2d8a6e 0%, transparent 70%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Hero text container */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* The sacred title rune line */
+.rune-line {
+  font-size: 0.75rem;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-family: 'Cinzel', serif;
+  opacity: 0;
+}
+
+/* Main name */
+.hero-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 900;
+  color: var(--cloud-white);
+  line-height: 1;
+  text-shadow:
+    0 0 60px rgba(201, 168, 76, 0.3),
+    0 0 120px rgba(168, 216, 234, 0.15);
+  opacity: 0;
+  letter-spacing: 0.05em;
+}
+
+/* Subtitle roles */
+.hero-roles {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  letter-spacing: 0.4em;
+  color: var(--teal);
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+/* Divider */
+.sacred-divider {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0;
+  margin: 0.5rem 0;
+}
+
+/* Description */
+.hero-desc {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-dim);
+  max-width: 520px;
+  line-height: 1.8;
+  opacity: 0;
+}
+
+/* CTA Buttons */
+.cta-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  opacity: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-primary {
+  padding: 1rem 2.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  background: rgba(201, 168, 76, 0.08);
+  text-decoration: none;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2), inset 0 0 20px rgba(201,168,76,0.05);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  padding: 1rem 2.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border: 1px solid rgba(168, 216, 234, 0.3);
+  color: var(--sky-blue);
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  cursor: none;
+}
+
+.btn-secondary:hover {
+  border-color: var(--sky-blue);
+  background: rgba(168, 216, 234, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Scroll hint at bottom */
+.scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: scrollFloat 3s ease-in-out infinite;
+}
+
+.scroll-hint span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  color: var(--text-dim);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ============================================
+   ISLAND SECTION BASE — Shared island styling
+   ============================================ */
+.island-section {
+  padding: 8rem 4rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.island-container {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Section header */
+.island-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.island-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+.island-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 600;
+  color: var(--cloud-white);
+  line-height: 1.1;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+}
+
+.island-subtitle {
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  line-height: 1.7;
+}
+
+/* The floating divider between sections */
+.sky-bridge {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sky-bridge::before {
+  content: '✦';
+  font-size: 1.2rem;
+  color: var(--gold);
+  opacity: 0.5;
+}
+
+/* ============================================
+   GLASS CARD — Used across all islands
+   ============================================ */
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  opacity: 0.5;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px rgba(201,168,76,0.08);
+}
+
+/* Corner accents on cards */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 30px; height: 30px;
+  border-bottom: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+}
+
+/* ============================================
+   SECTION 2 — SYSTEMS ISLAND
+   ============================================ */
+#systems {
+  background: radial-gradient(ellipse at 30% 50%, rgba(29, 78, 120, 0.15), transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(45, 138, 110, 0.08), transparent 50%);
+}
+
+.systems-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.skill-card {
+  padding: 2rem 2.5rem;
+}
+
+/* Card icon glyph */
+.card-glyph {
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  filter: drop-shadow(0 0 8px rgba(201,168,76,0.4));
+}
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--cloud-white);
+  margin-bottom: 0.8rem;
+}
+
+.card-desc {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+/* Tech tags / skills list */
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  color: var(--teal);
+  background: rgba(78, 205, 196, 0.05);
+  text-transform: uppercase;
+}
+
+/* Energy flow line — represents API signals */
+.energy-bar {
+  height: 2px;
+  background: linear-gradient(to right, var(--teal), var(--gold), var(--emerald));
+  border-radius: 1px;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.energy-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent, white, transparent);
+  width: 40%;
+  animation: energyFlow 2.5s ease-in-out infinite;
+}
+
+@keyframes energyFlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+/* ============================================
+   SECTION 3 — INTELLIGENCE ISLAND
+   ============================================ */
+#intelligence {
+  background: radial-gradient(ellipse at 60% 40%, rgba(78, 205, 196, 0.08), transparent 60%),
+              radial-gradient(ellipse at 20% 70%, rgba(45, 138, 110, 0.12), transparent 50%);
+}
+
+.intelligence-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* Sacred tree / neural sphere visualization */
+.neural-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 400px;
+}
+
+/* Orbital rings */
+.orbit-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+
+.orbit-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbit-ring:nth-child(1) {
+  border-color: rgba(78, 205, 196, 0.3);
+  animation: spinOrbit 12s linear infinite;
+}
+
+.orbit-ring:nth-child(2) {
+  inset: 30px;
+  border-color: rgba(201, 168, 76, 0.25);
+  animation: spinOrbit 8s linear infinite reverse;
+}
+
+.orbit-ring:nth-child(3) {
+  inset: 65px;
+  border-color: rgba(45, 138, 110, 0.35);
+  animation: spinOrbit 5s linear infinite;
+}
+
+/* Orbital node dots */
+.orbit-node {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px var(--gold);
+}
+
+/* Center orb */
+.center-orb {
+  position: absolute;
+  inset: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, rgba(78,205,196,0.4), rgba(45,138,110,0.2), transparent);
+  border-radius: 50%;
+  border: 1px solid rgba(78,205,196,0.4);
+  box-shadow: 0 0 40px rgba(78,205,196,0.2), inset 0 0 20px rgba(78,205,196,0.1);
+  animation: orbPulse 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+@keyframes spinOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(78,205,196,0.2), inset 0 0 20px rgba(78,205,196,0.1); }
+  50% { box-shadow: 0 0 80px rgba(78,205,196,0.4), inset 0 0 30px rgba(78,205,196,0.2); }
+}
+
+/* Intelligence text content */
+.intelligence-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rune-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border-left: 1px solid var(--glass-border);
+  transition: border-color 0.3s ease;
+}
+
+.rune-item:hover {
+  border-color: var(--gold);
+}
+
+.rune-symbol {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(78,205,196,0.5));
+}
+
+.rune-text h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--cloud-white);
+  margin-bottom: 0.5rem;
+}
+
+.rune-text p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* ============================================
+   SECTION 4 — STABILITY ISLAND
+   ============================================ */
+#stability {
+  background: radial-gradient(ellipse at 50% 50%, rgba(107, 124, 141, 0.1), transparent 60%);
+}
+
+.stability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.pillar-card {
+  text-align: center;
+  padding: 3rem 2rem;
+  position: relative;
+}
+
+/* Anchor / pillar symbol top */
+.pillar-symbol {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 10px rgba(201,168,76,0.3));
+}
+
+.pillar-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--cloud-white);
+  margin-bottom: 0.8rem;
+}
+
+.pillar-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Stability bar at bottom of card */
+.stability-meter {
+  margin-top: 1.5rem;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.stability-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--emerald), var(--teal));
+  transition: width 1.5s ease;
+}
+
+/* ============================================
+   SECTION 5 — FINAL ASCENSION (CONTACT)
+   ============================================ */
+#ascension {
+  min-height: 100vh;
+  text-align: center;
+  padding: 8rem 2rem;
+  background: radial-gradient(ellipse at 50% 40%, rgba(201, 168, 76, 0.08), transparent 60%),
+              radial-gradient(ellipse at 30% 80%, rgba(168, 216, 234, 0.06), transparent 50%);
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* Sacred temple gate visual */
+.temple-gate {
+  position: relative;
+  width: 200px;
+  height: 150px;
+  margin: 0 auto 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gate-left, .gate-right {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+.gate-left { left: 0; }
+.gate-right { right: 0; }
+
+.gate-top {
+  position: absolute;
+  top: 0;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+.gate-glyph {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
+  animation: glyphPulse 4s ease-in-out infinite;
+}
+
+@keyframes glyphPulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.5)); }
+  50% { filter: drop-shadow(0 0 40px rgba(201,168,76,0.9)); }
+}
+
+.ascension-tagline {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 600;
+  color: var(--cloud-white);
+  max-width: 700px;
+  line-height: 1.3;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+}
+
+.ascension-sub {
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  max-width: 450px;
+}
+
+/* Contact card */
+.contact-vessel {
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+.contact-email {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-light);
+  text-decoration: none;
+  padding: 1.5rem 3rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  cursor: none;
+}
+
+.contact-email:hover {
+  background: rgba(201, 168, 76, 0.08);
+  border-color: var(--gold);
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Footer rune */
+.footer-rune {
+  margin-top: 6rem;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.5em;
+  color: rgba(232, 223, 200, 0.2);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   FLOATING PARTICLES overlay
+   ============================================ */
+.particles-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Individual particles generated by JS */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: floatParticle var(--duration, 20s) var(--delay, 0s) ease-in-out infinite;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(100vh) translateX(var(--drift-start, 0px));
+    opacity: 0;
+  }
+  10% { opacity: var(--max-opacity, 0.4); }
+  90% { opacity: var(--max-opacity, 0.4); }
+  100% {
+    transform: translateY(-20vh) translateX(var(--drift-end, 20px));
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   CLOUD LAYERS — Parallax clouds
+   ============================================ */
+.cloud-layer {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.12;
+  width: 300px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+  filter: blur(20px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  nav { padding: 1.5rem 1.5rem; }
+  .nav-links { display: none; }
+
+  .island-section { padding: 6rem 1.5rem; }
+
+  .systems-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intelligence-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .neural-visual { height: 300px; }
+
+  .stability-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   SCROLL REVEAL utility
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor elements -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Sky canvas for background rendering -->
+<canvas id="sky-canvas"></canvas>
+
+<!-- Floating particles overlay -->
+<div class="particles-overlay" id="particles"></div>
+
+<!-- Main scroll wrapper -->
+<div id="scroll-wrapper">
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#arrival" class="nav-logo">𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓</a>
+    <ul class="nav-links">
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#intelligence">Intelligence</a></li>
+      <li><a href="#stability">Stability</a></li>
+      <li><a href="#ascension">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===================== SECTION 1: ARRIVAL ===================== -->
+  <section id="arrival">
+
+    <!-- Distant island shapes -->
+    <div class="island-left"></div>
+    <div class="island-right"></div>
+
+    <!-- Hero content -->
+    <div class="hero-content">
+      <span class="rune-line" id="rune-tag">✦ &nbsp; Portfolio &nbsp; ✦</span>
+
+      <h1 class="hero-name" id="hero-name">𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓</h1>
+
+      <div class="sacred-divider" id="hero-divider"></div>
+
+      <p class="hero-roles" id="hero-roles">Systems Engineer &nbsp;•&nbsp; Backend &nbsp;•&nbsp; AI &nbsp;•&nbsp; Realtime Systems</p>
+
+      <p class="hero-desc" id="hero-desc">
+        Crafting scalable backend systems, intelligent workflows,
+        and immersive digital experiences above the ordinary.
+      </p>
+
+      <div class="cta-group" id="hero-cta">
+        <a href="#systems" class="btn-primary">Enter The World</a>
+        <a href="#ascension" class="btn-secondary">Contact</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint" id="scroll-hint">
+      <span>Scroll to descend</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Sky bridge transition -->
+  <div class="sky-bridge"></div>
+
+  <!-- ===================== SECTION 2: SYSTEMS ISLAND ===================== -->
+  <section id="systems" class="island-section">
+    <div class="island-container">
+
+      <div class="island-header reveal">
+        <span class="island-tag">Island I — The Forge</span>
+        <h2 class="island-title">Systems &amp; Architecture</h2>
+        <p class="island-subtitle">
+          Ancient mechanisms that carry the weight of civilization.
+          Infrastructure carved from precision and intent.
+        </p>
+      </div>
+
+      <!-- Energy flow bar representing APIs -->
+      <div class="energy-bar reveal"></div>
+
+      <div class="systems-grid">
+
+        <!-- Card 1: Backend -->
+        <div class="glass-card skill-card reveal">
+          <span class="card-glyph">⚙️</span>
+          <h3 class="card-title">Backend Architecture</h3>
+          <p class="card-desc">
+            Spring Boot services woven into living architectures.
+            RESTful APIs that speak clearly across the sky.
+          </p>
+          <div class="tech-tags">
+            <span class="tag">Spring Boot</span>
+            <span class="tag">REST API</span>
+            <span class="tag">Java</span>
+            <span class="tag">Microservices</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Realtime -->
+        <div class="glass-card skill-card reveal">
+          <span class="card-glyph">⚡</span>
+          <h3 class="card-title">Realtime Systems</h3>
+          <p class="card-desc">
+            WebSocket bridges between worlds. Live data
+            flowing like wind through suspended pathways.
+          </p>
+          <div class="tech-tags">
+            <span class="tag">WebSockets</span>
+            <span class="tag">Event Streams</span>
+            <span class="tag">Kafka</span>
+            <span class="tag">Redis</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Data -->
+        <div class="glass-card skill-card reveal">
+          <span class="card-glyph">🗃️</span>
+          <h3 class="card-title">Data Engineering</h3>
+          <p class="card-desc">
+            PostgreSQL vaults guarding the knowledge of ages.
+            Queries shaped with the patience of ancient craftsmen.
+          </p>
+          <div class="tech-tags">
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Schema Design</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Infrastructure -->
+        <div class="glass-card skill-card reveal">
+          <span class="card-glyph">🏗️</span>
+          <h3 class="card-title">Infrastructure</h3>
+          <p class="card-desc">
+            Docker vessels carrying services across clouds.
+            Environments sealed, portable, and sovereign.
+          </p>
+          <div class="tech-tags">
+            <span class="tag">Docker</span>
+            <span class="tag">CI/CD</span>
+            <span class="tag">Linux</span>
+            <span class="tag">DevOps</span>
+          </div>
+        </div>
+
+      </div><!-- end systems-grid -->
+    </div>
+  </section>
+
+  <div class="sky-bridge"></div>
+
+  <!-- ===================== SECTION 3: INTELLIGENCE ISLAND ===================== -->
+  <section id="intelligence" class="island-section">
+    <div class="island-container">
+
+      <div class="island-header reveal">
+        <span class="island-tag">Island II — The Sanctum</span>
+        <h2 class="island-title">Intelligence &amp; Automation</h2>
+        <p class="island-subtitle">
+          Where ancient runes become reasoning machines.
+          Knowledge encoded in living light.
+        </p>
+      </div>
+
+      <div class="intelligence-layout">
+
+        <!-- Left: orbital visualization -->
+        <div class="neural-visual reveal">
+          <div class="orbit-container">
+            <!-- Outer ring -->
+            <div class="orbit-ring">
+              <div class="orbit-node"></div>
+            </div>
+            <!-- Middle ring -->
+            <div class="orbit-ring">
+              <div class="orbit-node"></div>
+            </div>
+            <!-- Inner ring -->
+            <div class="orbit-ring">
+              <div class="orbit-node"></div>
+            </div>
+            <!-- Center sphere -->
+            <div class="center-orb">✦</div>
+          </div>
+        </div>
+
+        <!-- Right: intelligence capabilities -->
+        <div class="intelligence-content">
+
+          <div class="rune-item reveal">
+            <span class="rune-symbol">🌿</span>
+            <div class="rune-text">
+              <h4>AI Integration</h4>
+              <p>Weaving language models into backend systems. Conversations that carry purpose.</p>
+            </div>
+          </div>
+
+          <div class="rune-item reveal">
+            <span class="rune-symbol">🔮</span>
+            <div class="rune-text">
+              <h4>Intelligent Workflows</h4>
+              <p>Automating the repetitive so the essential may breathe. Systems that learn their place in the world.</p>
+            </div>
+          </div>
+
+          <div class="rune-item reveal">
+            <span class="rune-symbol">🌌</span>
+            <div class="rune-text">
+              <h4>Semantic Systems</h4>
+              <p>Vector search and meaning-aware retrieval. Finding signal within infinite noise.</p>
+            </div>
+          </div>
+
+          <div class="rune-item reveal">
+            <span class="rune-symbol">⚗️</span>
+            <div class="rune-text">
+              <h4>Data Pipelines</h4>
+              <p>Transforming raw material into refined knowledge. Processing flows built to endure.</p>
+            </div>
+          </div>
+
+        </div><!-- end intelligence-content -->
+      </div><!-- end intelligence-layout -->
+    </div>
+  </section>
+
+  <div class="sky-bridge"></div>
+
+  <!-- ===================== SECTION 4: STABILITY ISLAND ===================== -->
+  <section id="stability" class="island-section">
+    <div class="island-container">
+
+      <div class="island-header reveal">
+        <span class="island-tag">Island III — The Anchor</span>
+        <h2 class="island-title">Stability &amp; Craft</h2>
+        <p class="island-subtitle">
+          The ancient pillars that keep the islands aloft.
+          Engineering discipline in its most sacred form.
+        </p>
+      </div>
+
+      <div class="stability-grid">
+
+        <!-- Pillar 1: Testing -->
+        <div class="glass-card pillar-card reveal">
+          <span class="pillar-symbol">⚓</span>
+          <h3 class="pillar-name">Testing</h3>
+          <p class="pillar-desc">
+            End-to-end confidence through Cypress and Maestro.
+            Every path walked before the world sees it.
+          </p>
+          <div class="stability-meter">
+            <div class="stability-fill" style="width: 92%"></div>
+          </div>
+        </div>
+
+        <!-- Pillar 2: Deployment -->
+        <div class="glass-card pillar-card reveal">
+          <span class="pillar-symbol">🏛️</span>
+          <h3 class="pillar-name">Deployment</h3>
+          <p class="pillar-desc">
+            Dockerized environments released with ceremony.
+            No chaos. No surprises. Only precision.
+          </p>
+          <div class="stability-meter">
+            <div class="stability-fill" style="width: 88%"></div>
+          </div>
+        </div>
+
+        <!-- Pillar 3: Reliability -->
+        <div class="glass-card pillar-card reveal">
+          <span class="pillar-symbol">🗼</span>
+          <h3 class="pillar-name">Reliability</h3>
+          <p class="pillar-desc">
+            Systems that endure. Code reviewed as scripture.
+            The engineer remains when the hype fades.
+          </p>
+          <div class="stability-meter">
+            <div class="stability-fill" style="width: 95%"></div>
+          </div>
+        </div>
+
+      </div><!-- end stability-grid -->
+    </div>
+  </section>
+
+  <div class="sky-bridge"></div>
+
+  <!-- ===================== SECTION 5: FINAL ASCENSION ===================== -->
+  <section id="ascension">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;position:relative;z-index:5;">
+
+      <!-- Sacred gate -->
+      <div class="temple-gate reveal">
+        <div class="gate-left"></div>
+        <div class="gate-right"></div>
+        <div class="gate-top"></div>
+        <span class="gate-glyph">✦</span>
+      </div>
+
+      <span class="island-tag reveal">Final Island — The Summit</span>
+
+      <h2 class="ascension-tagline reveal">
+        Let's build something worthy of this world.
+      </h2>
+
+      <p class="ascension-sub reveal">
+        The architect is available. Rare collaborations considered.
+      </p>
+
+      <!-- Contact vessel -->
+      <div class="contact-vessel reveal">
+        <a href="mailto:m0hzawork1@gmail.com" class="contact-email">
+          m0hzawork1@gmail.com
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-rune" style="position:absolute;bottom:2rem;left:0;right:0;text-align:center;">
+      ✦ &nbsp; 𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓 &nbsp; ✦ &nbsp; Architect of Intelligent Worlds &nbsp; ✦
+    </div>
+  </section>
+
+</div><!-- end scroll-wrapper -->
+
+
+<script>
+/* ============================================================
+   MAIN SCRIPT
+   All the motion, animation, and life of the portfolio world.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. LENIS SMOOTH SCROLL SETUP
+   Makes scrolling feel like gliding through the sky
+   ---------------------------------------------------------- */
+const lenis = new Lenis({
+  duration: 1.6,        // Slower = more cinematic glide
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth ease out
+  smooth: true,
+});
+
+// Connect Lenis to GSAP's ticker so they sync perfectly
+function lenisRaf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(lenisRaf);
+}
+requestAnimationFrame(lenisRaf);
+
+// Tell ScrollTrigger to use Lenis scroll position
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.lagSmoothing(0);
+
+/* ----------------------------------------------------------
+   2. GSAP + SCROLLTRIGGER REGISTRATION
+   ---------------------------------------------------------- */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ----------------------------------------------------------
+   3. CUSTOM CURSOR
+   Tracks mouse with slight lag for elegance
+   ---------------------------------------------------------- */
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0;
+let ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  // Dot follows instantly
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top  = mouseY + 'px';
+});
+
+// Ring follows with lag (smooth trailing)
+function updateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  cursorRing.style.left = ringX + 'px';
+  cursorRing.style.top  = ringY + 'px';
+  requestAnimationFrame(updateRing);
+}
+updateRing();
+
+// Scale up cursor on hoverable elements
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    cursorRing.style.width = '60px';
+    cursorRing.style.height = '60px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px';
+    cursor.style.height = '10px';
+    cursorRing.style.width = '36px';
+    cursorRing.style.height = '36px';
+  });
+});
+
+/* ----------------------------------------------------------
+   4. SKY CANVAS — The living atmospheric background
+   Draws: gradient sky, slow-moving clouds, distant birds
+   ---------------------------------------------------------- */
+const canvas = document.getElementById('sky-canvas');
+const ctx = canvas.getContext('2d');
+let w, h;
+
+// Resize canvas to fill window
+function resizeCanvas() {
+  w = canvas.width  = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+/* Cloud data — each cloud is an object with position and drift speed */
+const clouds = Array.from({ length: 12 }, (_, i) => ({
+  x: Math.random() * 2000 - 500,  // Spread across wide range
+  y: Math.random() * h * 0.8,
+  width: 200 + Math.random() * 300,
+  height: 40 + Math.random() * 60,
+  speed: 0.08 + Math.random() * 0.15,  // Very slow drift
+  opacity: 0.04 + Math.random() * 0.08,
+}));
+
+/* Distant bird data — tiny moving specks */
+const birds = Array.from({ length: 8 }, () => ({
+  x: Math.random() * w,
+  y: 50 + Math.random() * h * 0.4,
+  speed: 0.3 + Math.random() * 0.5,
+  size: 1 + Math.random() * 2,
+  opacity: 0.15 + Math.random() * 0.25,
+}));
+
+let scrollY = 0;
+window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+/* Main canvas draw loop */
+function drawSky() {
+  ctx.clearRect(0, 0, w, h);
+
+  // Deep sky gradient — top to middle
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+  skyGrad.addColorStop(0,   '#050d1a');   // Very deep navy at top
+  skyGrad.addColorStop(0.3, '#0a1628');   // Deep blue
+  skyGrad.addColorStop(0.6, '#0f2240');   // Slightly lighter
+  skyGrad.addColorStop(1,   '#0a1628');   // Back to dark at bottom
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Atmospheric glow — a soft sun bloom on the horizon
+  const bloomX = w * 0.5 + Math.sin(Date.now() * 0.0003) * 50;
+  const bloom = ctx.createRadialGradient(bloomX, h * 0.45, 0, bloomX, h * 0.45, h * 0.5);
+  bloom.addColorStop(0,   'rgba(201, 168, 76, 0.06)');
+  bloom.addColorStop(0.4, 'rgba(168, 216, 234, 0.04)');
+  bloom.addColorStop(1,   'transparent');
+  ctx.fillStyle = bloom;
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw clouds with slow parallax tied to scroll
+  clouds.forEach(cloud => {
+    // Drift clouds slowly to the right
+    cloud.x += cloud.speed;
+    if (cloud.x > w + 500) cloud.x = -600; // Wrap around
+
+    // Parallax offset: deeper clouds move less
+    const parallaxOffset = scrollY * 0.05 * cloud.speed;
+
+    ctx.save();
+    ctx.globalAlpha = cloud.opacity;
+
+    // Draw ellipse for cloud
+    const grad = ctx.createRadialGradient(
+      cloud.x, cloud.y - parallaxOffset, 0,
+      cloud.x, cloud.y - parallaxOffset, cloud.width * 0.5
+    );
+    grad.addColorStop(0,   'rgba(200, 220, 255, 0.9)');
+    grad.addColorStop(0.5, 'rgba(180, 210, 240, 0.5)');
+    grad.addColorStop(1,   'transparent');
+
+    ctx.beginPath();
+    ctx.ellipse(
+      cloud.x, cloud.y - parallaxOffset,
+      cloud.width * 0.5, cloud.height * 0.5,
+      0, 0, Math.PI * 2
+    );
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.restore();
+  });
+
+  // Draw distant birds as tiny V shapes
+  birds.forEach(bird => {
+    bird.x += bird.speed;
+    if (bird.x > w + 20) bird.x = -20; // Wrap
+
+    ctx.save();
+    ctx.globalAlpha = bird.opacity;
+    ctx.strokeStyle = 'rgba(200, 220, 255, 0.8)';
+    ctx.lineWidth = bird.size * 0.5;
+    ctx.beginPath();
+    // Simple V shape for bird silhouette
+    ctx.moveTo(bird.x - bird.size * 3, bird.y);
+    ctx.lineTo(bird.x, bird.y - bird.size * 2);
+    ctx.lineTo(bird.x + bird.size * 3, bird.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  // Request next frame — keeps animation running
+  requestAnimationFrame(drawSky);
+}
+drawSky(); // Start the sky
+
+/* ----------------------------------------------------------
+   5. FLOATING PARTICLES
+   Small glowing dots that drift upward like fireflies/spores
+   ---------------------------------------------------------- */
+const particleContainer = document.getElementById('particles');
+const PARTICLE_COUNT = 40; // Keep count low for performance
+
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+
+  // Randomize each particle's properties
+  const size    = 1 + Math.random() * 3;
+  const left    = Math.random() * 100;
+  const dur     = 15 + Math.random() * 25;  // Duration in seconds
+  const delay   = Math.random() * -30;       // Negative delay starts mid-animation
+  const driftS  = (Math.random() - 0.5) * 100; // Horizontal drift start
+  const driftE  = (Math.random() - 0.5) * 100; // Horizontal drift end
+  const maxOp   = 0.2 + Math.random() * 0.4;
+
+  // Gold or teal particles randomly
+  const isGold  = Math.random() > 0.5;
+  const color   = isGold
+    ? `rgba(201, 168, 76, ${maxOp})`
+    : `rgba(78, 205, 196, ${maxOp})`;
+
+  // Apply styles via CSS custom properties (variables)
+  p.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${left}%;
+    background: ${color};
+    box-shadow: 0 0 ${size * 3}px ${color};
+    --duration: ${dur}s;
+    --delay: ${delay}s;
+    --drift-start: ${driftS}px;
+    --drift-end: ${driftE}px;
+    --max-opacity: ${maxOp};
+    animation-duration: ${dur}s;
+    animation-delay: ${delay}s;
+  `;
+
+  particleContainer.appendChild(p);
+}
+
+/* ----------------------------------------------------------
+   6. HERO ENTRANCE ANIMATION
+   Elements fade and rise into view on page load
+   ---------------------------------------------------------- */
+const heroTimeline = gsap.timeline({ delay: 0.3 });
+
+heroTimeline
+  .to('#rune-tag',     { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 0)
+  .to('#hero-name',    { opacity: 1, y: 0, duration: 1.4,  ease: 'power3.out' }, 0.3)
+  .to('#hero-divider', { opacity: 1, y: 0, duration: 0.8,  ease: 'power2.out' }, 0.9)
+  .to('#hero-roles',   { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.1)
+  .to('#hero-desc',    { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.4)
+  .to('#hero-cta',     { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.7)
+  .to('#scroll-hint',  { opacity: 1, duration: 1 }, 2.2);
+
+/* ----------------------------------------------------------
+   7. SCROLL REVEAL ANIMATIONS
+   Elements with class "reveal" animate in when scrolled to
+   ---------------------------------------------------------- */
+document.querySelectorAll('.reveal').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 40 },  // Start: invisible, shifted down
+    {
+      opacity: 1,
+      y: 0,
+      duration: 1.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',    // Trigger when element is 85% from top of viewport
+        toggleActions: 'play none none none',  // Only plays once
+      }
+    }
+  );
+});
+
+/* ----------------------------------------------------------
+   8. PARALLAX ON HERO NAME
+   Subtle vertical shift as you scroll away from hero
+   ---------------------------------------------------------- */
+gsap.to('#hero-name', {
+  yPercent: -20,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#arrival',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true,  // Ties animation directly to scroll position
+  }
+});
+
+/* Also fade the whole hero content as we scroll past it */
+gsap.to('.hero-content', {
+  opacity: 0,
+  scale: 0.95,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#arrival',
+    start: '60% top',
+    end: 'bottom top',
+    scrub: true,
+  }
+});
+
+/* ----------------------------------------------------------
+   9. STABILITY METERS — Animated fill on scroll into view
+   ---------------------------------------------------------- */
+document.querySelectorAll('.stability-fill').forEach(bar => {
+  const targetWidth = bar.style.width; // Save the target width
+  bar.style.width = '0%';             // Start at 0
+
+  ScrollTrigger.create({
+    trigger: bar,
+    start: 'top 90%',
+    onEnter: () => {
+      // Animate to the target width
+      bar.style.transition = 'width 1.8s ease';
+      bar.style.width = targetWidth;
+    }
+  });
+});
+
+/* ----------------------------------------------------------
+   10. SUBTLE MOUSE PARALLAX on hero section
+   The name and desc shift slightly with mouse movement
+   ---------------------------------------------------------- */
+let mouseParallaxX = 0, mouseParallaxY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  // Normalize mouse to -1..1 range
+  mouseParallaxX = (e.clientX / window.innerWidth  - 0.5) * 2;
+  mouseParallaxY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+// Smoothly apply parallax in animation frame loop
+let pX = 0, pY = 0;
+function mouseParallax() {
+  pX += (mouseParallaxX - pX) * 0.05;
+  pY += (mouseParallaxY - pY) * 0.05;
+
+  // Only apply when near the top of the page
+  if (window.scrollY < window.innerHeight) {
+    const factor = 1 - window.scrollY / window.innerHeight;
+    gsap.set('#hero-name', {
+      x: pX * 12 * factor,
+      y: pY * 8  * factor,
+    });
+    gsap.set('.island-left', {
+      x: pX * 25 * factor,
+      y: pY * 15 * factor,
+    });
+    gsap.set('.island-right', {
+      x: pX * -20 * factor,
+      y: pY * 12  * factor,
+    });
+  }
+
+  requestAnimationFrame(mouseParallax);
+}
+mouseParallax();
+
+/* ----------------------------------------------------------
+   11. ISLAND SECTION ENTRY EFFECTS
+   Each section subtly scales in as it enters viewport
+   ---------------------------------------------------------- */
+['#systems', '#intelligence', '#stability', '#ascension'].forEach(id => {
+  gsap.fromTo(id,
+    { scale: 0.97 },
+    {
+      scale: 1,
+      ease: 'power2.out',
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: id,
+        start: 'top 90%',
+        toggleActions: 'play none none none',
+      }
+    }
+  );
+});
+
+/* ----------------------------------------------------------
+   12. ORBITAL ANIMATION GLOW PULSE (Intelligence section)
+   Extra pulsing glow on the central orb tied to scroll depth
+   ---------------------------------------------------------- */
+ScrollTrigger.create({
+  trigger: '#intelligence',
+  start: 'top center',
+  onEnter: () => {
+    gsap.to('.center-orb', {
+      scale: 1.2,
+      duration: 0.6,
+      ease: 'back.out(1.7)',
+      yoyo: true,
+      repeat: 1,
+    });
+  }
+});
+
+</script>
+</body>
+</html>
