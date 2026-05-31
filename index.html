@@ -3,1683 +3,1326 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓 — Architect of Intelligent Worlds</title>
-
-<!-- Google Fonts: Cinzel + Cormorant Garamond -->
+<title>DEVOTION — The Celestial Realm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-
-<!-- GSAP + ScrollTrigger -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-<!-- Lenis Smooth Scroll -->
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;200;300&display=swap" rel="stylesheet">
 <style>
-/* ============================================
-   CSS VARIABLES — The color palette of the sky
-   ============================================ */
-:root {
-  --sky-blue: #a8d8ea;
-  --deep-sky: #1a3a5c;
-  --gold: #c9a84c;
-  --gold-light: #f0d080;
-  --emerald: #2d8a6e;
-  --teal: #4ecdc4;
-  --cloud-white: #f5f0e8;
-  --stone: #6b7c8d;
-  --fog: rgba(168, 216, 234, 0.15);
-  --glass: rgba(255, 255, 255, 0.07);
-  --glass-border: rgba(201, 168, 76, 0.3);
-  --text-primary: #e8dfc8;
-  --text-dim: rgba(232, 223, 200, 0.6);
-}
-
-/* ============================================
-   RESET & BASE
-   ============================================ */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: auto; /* Lenis handles this */
-}
-
-body {
-  background: #0a1628;
-  color: var(--text-primary);
-  font-family: 'Cormorant Garamond', serif;
-  overflow-x: hidden;
-  cursor: none; /* Custom cursor */
-}
-
-/* ============================================
-   CUSTOM CURSOR
-   ============================================ */
-.cursor {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gold);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-  mix-blend-mode: screen;
-}
-
-.cursor-ring {
-  position: fixed;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(201, 168, 76, 0.5);
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
-}
-
-/* ============================================
-   CANVAS — The living sky background
-   ============================================ */
-#sky-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ============================================
-   SCROLLABLE WRAPPER
-   ============================================ */
-#scroll-wrapper {
-  position: relative;
-  z-index: 1;
-}
-
-/* ============================================
-   NAVIGATION
-   ============================================ */
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  padding: 1.5rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(to bottom, rgba(10,22,40,0.8), transparent);
-  backdrop-filter: blur(2px);
-}
-
-.nav-logo {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--gold);
-  letter-spacing: 0.15em;
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: var(--gold-light);
-}
-
-/* ============================================
-   SECTION BASE
-   ============================================ */
-section {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* ============================================
-   SECTION 1 — ARRIVAL (HERO)
-   ============================================ */
-#arrival {
-  min-height: 100vh;
-  flex-direction: column;
-  text-align: center;
-  padding: 0 2rem;
-}
-
-/* Floating island silhouette drawn with CSS */
-.island-silhouette {
-  position: absolute;
-  bottom: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 200px;
-  opacity: 0.18;
-  pointer-events: none;
-}
-
-/* Large distant island shapes */
-.island-left {
-  position: absolute;
-  bottom: 20%;
-  left: 5%;
-  width: 250px;
-  height: 100px;
-  background: radial-gradient(ellipse at 50% 100%, #1a3a5c 0%, transparent 70%);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.island-right {
-  position: absolute;
-  bottom: 30%;
-  right: 8%;
-  width: 180px;
-  height: 80px;
-  background: radial-gradient(ellipse at 50% 100%, #2d8a6e 0%, transparent 70%);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-/* Hero text container */
-.hero-content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-/* The sacred title rune line */
-.rune-line {
-  font-size: 0.75rem;
-  letter-spacing: 0.5em;
-  color: var(--gold);
-  text-transform: uppercase;
-  font-family: 'Cinzel', serif;
-  opacity: 0;
-}
-
-/* Main name */
-.hero-name {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(3.5rem, 10vw, 9rem);
-  font-weight: 900;
-  color: var(--cloud-white);
-  line-height: 1;
-  text-shadow:
-    0 0 60px rgba(201, 168, 76, 0.3),
-    0 0 120px rgba(168, 216, 234, 0.15);
-  opacity: 0;
-  letter-spacing: 0.05em;
-}
-
-/* Subtitle roles */
-.hero-roles {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-  letter-spacing: 0.4em;
-  color: var(--teal);
-  text-transform: uppercase;
-  opacity: 0;
-}
-
-/* Divider */
-.sacred-divider {
-  width: 120px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold), transparent);
-  opacity: 0;
-  margin: 0.5rem 0;
-}
-
-/* Description */
-.hero-desc {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--text-dim);
-  max-width: 520px;
-  line-height: 1.8;
-  opacity: 0;
-}
-
-/* CTA Buttons */
-.cta-group {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  opacity: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.btn-primary {
-  padding: 1rem 2.5rem;
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  border: 1px solid var(--gold);
-  color: var(--gold-light);
-  background: rgba(201, 168, 76, 0.08);
-  text-decoration: none;
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: none;
-}
-
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(201,168,76,0.15), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary:hover {
-  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2), inset 0 0 20px rgba(201,168,76,0.05);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  padding: 1rem 2.5rem;
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  border: 1px solid rgba(168, 216, 234, 0.3);
-  color: var(--sky-blue);
-  background: transparent;
-  text-decoration: none;
-  transition: all 0.4s ease;
-  cursor: none;
-}
-
-.btn-secondary:hover {
-  border-color: var(--sky-blue);
-  background: rgba(168, 216, 234, 0.05);
-  transform: translateY(-2px);
-}
-
-/* Scroll hint at bottom */
-.scroll-hint {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0;
-  animation: scrollFloat 3s ease-in-out infinite;
-}
-
-.scroll-hint span {
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.4em;
-  color: var(--text-dim);
-}
-
-.scroll-line {
-  width: 1px;
-  height: 50px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-  animation: scrollLine 2s ease-in-out infinite;
-}
-
-@keyframes scrollFloat {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(6px); }
-}
-
-@keyframes scrollLine {
-  0% { transform: scaleY(0); transform-origin: top; }
-  50% { transform: scaleY(1); transform-origin: top; }
-  51% { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
-}
-
-/* ============================================
-   ISLAND SECTION BASE — Shared island styling
-   ============================================ */
-.island-section {
-  padding: 8rem 4rem;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.island-container {
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* Section header */
-.island-header {
-  text-align: center;
-  margin-bottom: 5rem;
-}
-
-.island-tag {
-  font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.5em;
-  color: var(--gold);
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 1.2rem;
-}
-
-.island-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 600;
-  color: var(--cloud-white);
-  line-height: 1.1;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
-}
-
-.island-subtitle {
-  font-size: 1.1rem;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--text-dim);
-  margin-top: 1rem;
-  line-height: 1.7;
-}
-
-/* The floating divider between sections */
-.sky-bridge {
-  width: 100%;
-  height: 200px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.sky-bridge::before {
-  content: '✦';
-  font-size: 1.2rem;
-  color: var(--gold);
-  opacity: 0.5;
-}
-
-/* ============================================
-   GLASS CARD — Used across all islands
-   ============================================ */
-.glass-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  padding: 2.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-light), transparent);
-  opacity: 0.5;
-}
-
-.glass-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px rgba(201,168,76,0.08);
-}
-
-/* Corner accents on cards */
-.glass-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; right: 0;
-  width: 30px; height: 30px;
-  border-bottom: 1px solid var(--glass-border);
-  border-right: 1px solid var(--glass-border);
-}
-
-/* ============================================
-   SECTION 2 — SYSTEMS ISLAND
-   ============================================ */
-#systems {
-  background: radial-gradient(ellipse at 30% 50%, rgba(29, 78, 120, 0.15), transparent 60%),
-              radial-gradient(ellipse at 70% 80%, rgba(45, 138, 110, 0.08), transparent 50%);
-}
-
-.systems-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.skill-card {
-  padding: 2rem 2.5rem;
-}
-
-/* Card icon glyph */
-.card-glyph {
-  font-size: 1.8rem;
-  margin-bottom: 1.2rem;
-  display: block;
-  filter: drop-shadow(0 0 8px rgba(201,168,76,0.4));
-}
-
-.card-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--cloud-white);
-  margin-bottom: 0.8rem;
-}
-
-.card-desc {
-  font-size: 0.95rem;
-  font-weight: 300;
-  color: var(--text-dim);
-  line-height: 1.7;
-  margin-bottom: 1.2rem;
-}
-
-/* Tech tags / skills list */
-.tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid rgba(78, 205, 196, 0.3);
-  color: var(--teal);
-  background: rgba(78, 205, 196, 0.05);
-  text-transform: uppercase;
-}
-
-/* Energy flow line — represents API signals */
-.energy-bar {
-  height: 2px;
-  background: linear-gradient(to right, var(--teal), var(--gold), var(--emerald));
-  border-radius: 1px;
-  margin: 2rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.energy-bar::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, transparent, white, transparent);
-  width: 40%;
-  animation: energyFlow 2.5s ease-in-out infinite;
-}
-
-@keyframes energyFlow {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(350%); }
-}
-
-/* ============================================
-   SECTION 3 — INTELLIGENCE ISLAND
-   ============================================ */
-#intelligence {
-  background: radial-gradient(ellipse at 60% 40%, rgba(78, 205, 196, 0.08), transparent 60%),
-              radial-gradient(ellipse at 20% 70%, rgba(45, 138, 110, 0.12), transparent 50%);
-}
-
-.intelligence-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-/* Sacred tree / neural sphere visualization */
-.neural-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  height: 400px;
-}
-
-/* Orbital rings */
-.orbit-container {
-  position: relative;
-  width: 280px;
-  height: 280px;
-}
-
-.orbit-ring {
-  position: absolute;
-  inset: 0;
-  border: 1px solid;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.orbit-ring:nth-child(1) {
-  border-color: rgba(78, 205, 196, 0.3);
-  animation: spinOrbit 12s linear infinite;
-}
-
-.orbit-ring:nth-child(2) {
-  inset: 30px;
-  border-color: rgba(201, 168, 76, 0.25);
-  animation: spinOrbit 8s linear infinite reverse;
-}
-
-.orbit-ring:nth-child(3) {
-  inset: 65px;
-  border-color: rgba(45, 138, 110, 0.35);
-  animation: spinOrbit 5s linear infinite;
-}
-
-/* Orbital node dots */
-.orbit-node {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  top: -3px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 10px var(--gold);
-}
-
-/* Center orb */
-.center-orb {
-  position: absolute;
-  inset: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  background: radial-gradient(circle, rgba(78,205,196,0.4), rgba(45,138,110,0.2), transparent);
-  border-radius: 50%;
-  border: 1px solid rgba(78,205,196,0.4);
-  box-shadow: 0 0 40px rgba(78,205,196,0.2), inset 0 0 20px rgba(78,205,196,0.1);
-  animation: orbPulse 3s ease-in-out infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-}
-
-@keyframes spinOrbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes orbPulse {
-  0%, 100% { box-shadow: 0 0 40px rgba(78,205,196,0.2), inset 0 0 20px rgba(78,205,196,0.1); }
-  50% { box-shadow: 0 0 80px rgba(78,205,196,0.4), inset 0 0 30px rgba(78,205,196,0.2); }
-}
-
-/* Intelligence text content */
-.intelligence-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.rune-item {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-  padding: 1.5rem;
-  border-left: 1px solid var(--glass-border);
-  transition: border-color 0.3s ease;
-}
-
-.rune-item:hover {
-  border-color: var(--gold);
-}
-
-.rune-symbol {
-  font-size: 1.4rem;
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 6px rgba(78,205,196,0.5));
-}
-
-.rune-text h4 {
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  color: var(--cloud-white);
-  margin-bottom: 0.5rem;
-}
-
-.rune-text p {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-  font-weight: 300;
-  font-style: italic;
-}
-
-/* ============================================
-   SECTION 4 — STABILITY ISLAND
-   ============================================ */
-#stability {
-  background: radial-gradient(ellipse at 50% 50%, rgba(107, 124, 141, 0.1), transparent 60%);
-}
-
-.stability-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.pillar-card {
-  text-align: center;
-  padding: 3rem 2rem;
-  position: relative;
-}
-
-/* Anchor / pillar symbol top */
-.pillar-symbol {
-  font-size: 2.5rem;
-  display: block;
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 0 10px rgba(201,168,76,0.3));
-}
-
-.pillar-name {
-  font-family: 'Cinzel', serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.15em;
-  color: var(--cloud-white);
-  margin-bottom: 0.8rem;
-}
-
-.pillar-desc {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  line-height: 1.6;
-  font-weight: 300;
-  font-style: italic;
-}
-
-/* Stability bar at bottom of card */
-.stability-meter {
-  margin-top: 1.5rem;
-  height: 2px;
-  background: rgba(255,255,255,0.08);
-  position: relative;
-  overflow: hidden;
-}
-
-.stability-fill {
-  height: 100%;
-  background: linear-gradient(to right, var(--emerald), var(--teal));
-  transition: width 1.5s ease;
-}
-
-/* ============================================
-   SECTION 5 — FINAL ASCENSION (CONTACT)
-   ============================================ */
-#ascension {
-  min-height: 100vh;
-  text-align: center;
-  padding: 8rem 2rem;
-  background: radial-gradient(ellipse at 50% 40%, rgba(201, 168, 76, 0.08), transparent 60%),
-              radial-gradient(ellipse at 30% 80%, rgba(168, 216, 234, 0.06), transparent 50%);
-  flex-direction: column;
-  gap: 4rem;
-}
-
-/* Sacred temple gate visual */
-.temple-gate {
-  position: relative;
-  width: 200px;
-  height: 150px;
-  margin: 0 auto 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.gate-left, .gate-right {
-  position: absolute;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-  opacity: 0.4;
-}
-
-.gate-left { left: 0; }
-.gate-right { right: 0; }
-
-.gate-top {
-  position: absolute;
-  top: 0;
-  left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold), transparent);
-  opacity: 0.4;
-}
-
-.gate-glyph {
-  font-size: 3rem;
-  filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
-  animation: glyphPulse 4s ease-in-out infinite;
-}
-
-@keyframes glyphPulse {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.5)); }
-  50% { filter: drop-shadow(0 0 40px rgba(201,168,76,0.9)); }
-}
-
-.ascension-tagline {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.5rem, 4vw, 3rem);
-  font-weight: 600;
-  color: var(--cloud-white);
-  max-width: 700px;
-  line-height: 1.3;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
-}
-
-.ascension-sub {
-  font-size: 1.1rem;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--text-dim);
-  margin-top: 1rem;
-  max-width: 450px;
-}
-
-/* Contact card */
-.contact-vessel {
-  display: inline-block;
-  margin-top: 2rem;
-}
-
-.contact-email {
-  display: block;
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  color: var(--gold-light);
-  text-decoration: none;
-  padding: 1.5rem 3rem;
-  border: 1px solid var(--glass-border);
-  background: var(--glass);
-  backdrop-filter: blur(10px);
-  transition: all 0.4s ease;
-  cursor: none;
-}
-
-.contact-email:hover {
-  background: rgba(201, 168, 76, 0.08);
-  border-color: var(--gold);
-  box-shadow: 0 0 40px rgba(201, 168, 76, 0.15);
-  transform: translateY(-3px);
-}
-
-/* Footer rune */
-.footer-rune {
-  margin-top: 6rem;
-  text-align: center;
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.5em;
-  color: rgba(232, 223, 200, 0.2);
-  text-transform: uppercase;
-}
-
-/* ============================================
-   FLOATING PARTICLES overlay
-   ============================================ */
-.particles-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  overflow: hidden;
-}
-
-/* Individual particles generated by JS */
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  animation: floatParticle var(--duration, 20s) var(--delay, 0s) ease-in-out infinite;
-}
-
-@keyframes floatParticle {
-  0% {
-    transform: translateY(100vh) translateX(var(--drift-start, 0px));
-    opacity: 0;
-  }
-  10% { opacity: var(--max-opacity, 0.4); }
-  90% { opacity: var(--max-opacity, 0.4); }
-  100% {
-    transform: translateY(-20vh) translateX(var(--drift-end, 20px));
-    opacity: 0;
-  }
-}
-
-/* ============================================
-   CLOUD LAYERS — Parallax clouds
-   ============================================ */
-.cloud-layer {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.12;
-  width: 300px;
-  height: 80px;
-  border-radius: 50%;
-  background: white;
-  filter: blur(20px);
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 768px) {
-  nav { padding: 1.5rem 1.5rem; }
-  .nav-links { display: none; }
-
-  .island-section { padding: 6rem 1.5rem; }
-
-  .systems-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .intelligence-layout {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .neural-visual { height: 300px; }
-
-  .stability-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================
-   SCROLL REVEAL utility
-   ============================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#d4a843;--gold2:#f0c96e;--gold3:#fff8e7;
+  --ivory:#fdf8f0;--pearl:#f5f0e8;
+  --deep:#04081a;--sky:#0a1428;
+  --glow:rgba(212,168,67,0.4);
+  --cloudwhite:rgba(255,252,245,0.9);
+}
+html{scroll-behavior:smooth;height:100%}
+body{
+  background:var(--deep);
+  color:var(--ivory);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
+  cursor:crosshair;
+  height:100%;
+}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:1px}
+
+#webgl-canvas{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;
+}
+
+#overlay-canvas{
+  position:fixed;inset:0;z-index:1;
+  pointer-events:none;
+}
+
+.realm{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:5rem 2rem;
+}
+
+/* ── ARRIVAL ── */
+#realm-arrival{
+  height:100vh;overflow:hidden;
+  background:transparent;
+}
+
+.eyebrow{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;letter-spacing:.65em;
+  text-transform:uppercase;color:var(--gold);
+  opacity:.75;margin-bottom:1.8rem;
+  animation:fadeDown 2s ease .3s both;
+}
+
+.devotion-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(3.5rem,11vw,10.5rem);
+  font-weight:900;letter-spacing:.18em;
+  text-align:center;line-height:1;
+  background:linear-gradient(160deg,#fffde0 0%,#f0c96e 28%,#d4a843 52%,#f0c96e 74%,#fffde0 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 60px rgba(212,168,67,.55));
+  animation:titleReveal 3.5s ease .7s both;
+}
+
+.arrival-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(.9rem,1.8vw,1.25rem);
+  color:rgba(253,248,240,.45);
+  letter-spacing:.28em;text-align:center;
+  margin-top:1.8rem;
+  animation:fadeUp 2s ease 2.2s both;
+}
+
+.diamonds{
+  display:flex;justify-content:center;
+  gap:.9rem;margin-top:2.2rem;
+  animation:fadeUp 2s ease 2.8s both;
+}
+.diamonds span{color:var(--gold);font-size:.45rem;align-self:center}
+.diamonds span.big{font-size:.7rem;color:var(--gold2)}
+
+.scroll-cue{
+  position:absolute;bottom:3rem;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  animation:fadeUp 2s ease 3.5s both;
+}
+.scroll-cue label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:9px;letter-spacing:.55em;
+  text-transform:uppercase;color:rgba(212,168,67,.45);
+}
+.scroll-line{
+  width:1px;height:56px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:scrollPulse 2.5s ease-in-out infinite;
+}
+
+/* ── SECTION ANATOMY ── */
+.sacred-line{
+  width:1px;height:72px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  margin:0 auto;
+}
+
+.realm-subhead{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;letter-spacing:.65em;
+  text-transform:uppercase;color:rgba(212,168,67,.5);
+  text-align:center;margin-bottom:1rem;
+}
+
+.realm-heading{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.6rem,4.5vw,3.8rem);
+  font-weight:700;text-align:center;
+  background:linear-gradient(160deg,#fffde0 0%,#d4a843 50%,#fffde0 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 25px rgba(212,168,67,.45));
+  margin-bottom:4rem;
+}
+
+/* ── SYSTEMS REALM ── */
+#realm-systems{
+  background:linear-gradient(to bottom,
+    rgba(4,8,26,0) 0%,
+    rgba(6,12,32,.85) 20%,
+    rgba(8,16,40,.92) 50%,
+    rgba(6,12,32,.85) 80%,
+    rgba(4,8,26,0) 100%
+  );
+}
+
+.citadel-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;
+  width:100%;max-width:920px;
+}
+
+.citadel{
+  position:relative;
+  overflow:hidden;
+  cursor:default;
+  background:linear-gradient(160deg,rgba(8,14,36,.92),rgba(12,22,52,.92));
+  border:1px solid rgba(212,168,67,.12);
+  padding:2.8rem 2.2rem 2.4rem;
+  transition:all .6s ease;
+}
+.citadel::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .6s ease;
+}
+.citadel::after{
+  content:'';position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,.06),transparent 65%);
+  opacity:0;transition:opacity .5s ease;
+}
+.citadel:hover::before{transform:scaleX(1)}
+.citadel:hover::after{opacity:1}
+.citadel:hover{
+  border-color:rgba(212,168,67,.35);
+  background:linear-gradient(160deg,rgba(12,22,52,.96),rgba(18,32,72,.96));
+  box-shadow:0 0 50px rgba(212,168,67,.08),inset 0 0 50px rgba(212,168,67,.02);
+  transform:translateY(-3px);
+}
+
+.citadel-arch{
+  position:absolute;top:0;left:50%;
+  transform:translateX(-50%);
+  width:60%;height:40px;
+  border:1px solid rgba(212,168,67,.1);
+  border-bottom:none;
+  border-radius:60px 60px 0 0;
+  transition:border-color .5s;
+}
+.citadel:hover .citadel-arch{border-color:rgba(212,168,67,.3)}
+
+.citadel-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:3.5rem;
+  color:rgba(212,168,67,.12);
+  line-height:1;margin-bottom:.9rem;
+  transition:color .4s;
+  position:relative;z-index:2;
+}
+.citadel:hover .citadel-num{color:rgba(212,168,67,.3)}
+
+.citadel-title{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;letter-spacing:.45em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:.9rem;
+  position:relative;z-index:2;
+}
+
+.citadel-desc{
+  font-size:1rem;line-height:1.85;
+  color:rgba(253,248,240,.55);
+  position:relative;z-index:2;
+}
+
+.citadel-beam{
+  position:absolute;bottom:0;left:0;
+  height:1px;width:0%;
+  background:linear-gradient(to right,var(--gold),var(--gold2));
+  transition:width .7s ease;
+}
+.citadel:hover .citadel-beam{width:100%}
+
+.citadel-pillar-l,.citadel-pillar-r{
+  position:absolute;top:40px;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,rgba(212,168,67,.15),transparent);
+  transition:background .5s;
+}
+.citadel-pillar-l{left:12%}
+.citadel-pillar-r{right:12%}
+.citadel:hover .citadel-pillar-l,
+.citadel:hover .citadel-pillar-r{
+  background:linear-gradient(to bottom,rgba(212,168,67,.4),transparent);
+}
+
+/* ── INTELLIGENCE REALM ── */
+#realm-intelligence{
+  background:linear-gradient(to bottom,
+    rgba(4,8,26,0) 0%,
+    rgba(6,10,28,.88) 25%,
+    rgba(10,16,40,.94) 50%,
+    rgba(6,10,28,.88) 75%,
+    rgba(4,8,26,0) 100%
+  );
+}
+
+.engine-wrapper{
+  position:relative;
+  width:min(520px,90vw);height:min(520px,90vw);
+  margin:0 auto 4rem;
+}
+
+.ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(212,168,67,.2);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.r1{width:100%;height:100%;animation:spin 35s linear infinite;border-color:rgba(212,168,67,.12)}
+.r2{width:82%;height:82%;animation:spin 24s linear infinite reverse;border-color:rgba(212,168,67,.18)}
+.r3{width:64%;height:64%;animation:spin 16s linear infinite;border-color:rgba(212,168,67,.28)}
+.r4{width:46%;height:46%;animation:spin 11s linear infinite reverse;border-color:rgba(212,168,67,.4)}
+.r5{width:30%;height:30%;animation:spin 7s linear infinite;border-color:rgba(212,168,67,.6)}
+
+.ring-orb{
+  position:absolute;
+  border-radius:50%;background:var(--gold2);
+  top:-4px;left:calc(50% - 4px);
+  box-shadow:0 0 14px var(--gold),0 0 28px rgba(212,168,67,.4);
+}
+.r1 .ring-orb{width:8px;height:8px;top:-4px}
+.r2 .ring-orb{width:6px;height:6px;top:-3px;left:calc(50% - 3px)}
+.r3 .ring-orb{width:5px;height:5px;top:-2.5px;left:calc(50% - 2.5px)}
+
+.engine-center{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;z-index:10;
+}
+
+.engine-pulse{
+  width:90px;height:90px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,168,67,.65) 0%,rgba(212,168,67,.15) 45%,transparent 70%);
+  margin:0 auto 1rem;
+  animation:pulse 3.2s ease-in-out infinite;
+}
+
+.engine-label{
+  font-family:'Cinzel Decorative',serif;
+  font-size:.6rem;letter-spacing:.35em;
+  color:var(--gold);opacity:.85;
+}
+
+.intel-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1px;max-width:920px;width:100%;
+}
+
+.intel-card{
+  background:linear-gradient(135deg,rgba(8,14,36,.94),rgba(12,22,52,.94));
+  border:1px solid rgba(212,168,67,.09);
+  padding:2.2rem 2rem;
+  transition:all .4s ease;position:relative;overflow:hidden;
+}
+.intel-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(212,168,67,.05),transparent 70%);
+  opacity:0;transition:opacity .4s;
+}
+.intel-card:hover::after{opacity:1}
+.intel-card:hover{
+  border-color:rgba(212,168,67,.28);
+  transform:translateY(-2px);
+}
+.intel-lbl{
+  font-family:'Josefin Sans',sans-serif;font-size:9px;
+  letter-spacing:.55em;text-transform:uppercase;
+  color:var(--gold);opacity:.65;margin-bottom:.7rem;
+}
+.intel-name{
+  font-family:'Cinzel Decorative',serif;font-size:1.05rem;
+  color:var(--ivory);margin-bottom:.7rem;
+}
+.intel-body{font-size:.95rem;line-height:1.85;color:rgba(253,248,240,.5)}
+
+/* ── STABILITY REALM ── */
+#realm-stability{
+  background:linear-gradient(to bottom,
+    rgba(4,8,26,0) 0%,
+    rgba(8,14,36,.9) 25%,
+    rgba(10,18,44,.96) 50%,
+    rgba(8,14,36,.9) 75%,
+    rgba(4,8,26,0) 100%
+  );
+}
+
+.pillars-row{
+  display:flex;gap:2px;
+  align-items:flex-end;justify-content:center;
+  width:100%;max-width:920px;
+}
+
+.pillar{
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;align-items:center;
+  cursor:default;
+}
+
+.pillar-cap{
+  width:calc(100% + 24px);
+  padding:1.1rem 1.4rem;
+  background:linear-gradient(135deg,rgba(12,22,52,.97),rgba(18,32,72,.97));
+  border:1px solid rgba(212,168,67,.2);
+  text-align:center;
+  transition:all .5s ease;
+}
+.pillar:hover .pillar-cap{
+  border-color:rgba(212,168,67,.55);
+  box-shadow:0 0 35px rgba(212,168,67,.18);
+}
+.pillar-cap-title{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;letter-spacing:.45em;
+  text-transform:uppercase;color:var(--gold);
+}
+
+.pillar-shaft{
+  width:100%;
+  background:linear-gradient(to bottom,
+    rgba(212,168,67,.04),
+    rgba(12,22,52,.82),
+    rgba(8,14,36,.92)
+  );
+  border-left:1px solid rgba(212,168,67,.1);
+  border-right:1px solid rgba(212,168,67,.1);
+  position:relative;overflow:hidden;
+  transition:all .5s ease;
+}
+.pillar:hover .pillar-shaft{
+  background:linear-gradient(to bottom,
+    rgba(212,168,67,.18),
+    rgba(18,32,72,.9),
+    rgba(12,22,52,.96)
+  );
+  border-color:rgba(212,168,67,.3);
+  box-shadow:inset 0 0 35px rgba(212,168,67,.04),0 0 45px rgba(212,168,67,.08);
+}
+
+.pillar-vein{
+  position:absolute;left:50%;top:0;
+  width:1px;height:0;
+  background:linear-gradient(to bottom,transparent,var(--gold2),transparent);
+  transform:translateX(-50%);opacity:0;
+  transition:height .9s ease,opacity .9s ease;
+}
+.pillar:hover .pillar-vein{height:100%;opacity:.7;animation:veinFlow 2s ease-in-out infinite}
+
+.pillar-metrics{padding:1.6rem 1.4rem}
+.m-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem}
+.m-lbl{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(253,248,240,.38)}
+.m-val{font-family:'Cinzel Decorative',serif;font-size:.72rem;color:var(--gold)}
+.m-track{width:100%;height:1px;background:rgba(212,168,67,.1);margin-top:.28rem}
+.m-fill{height:100%;background:linear-gradient(to right,var(--gold),var(--gold2));box-shadow:0 0 6px var(--gold);transition:width 1.8s ease .3s}
+
+.pillar-base{
+  width:calc(100% + 16px);height:14px;
+  background:linear-gradient(90deg,transparent,rgba(212,168,67,.14),transparent);
+  border-top:1px solid rgba(212,168,67,.14);
+}
+
+.pillar-desc{
+  font-size:.82rem;line-height:1.75;
+  color:rgba(253,248,240,.45);
+  text-align:center;padding:1.2rem .5rem 0;
+  max-width:220px;
+}
+
+/* ── ASCENSION REALM ── */
+#realm-ascension{min-height:110vh}
+
+.gate-scene{
+  position:relative;
+  width:min(580px,92vw);height:min(680px,88vh);
+  margin:0 auto;
+  margin-bottom:5rem;
+  transform-style:preserve-3d;
+}
+
+.gate-frame-outer{
+  position:absolute;inset:0;
+  border:1px solid rgba(212,168,67,.22);
+  transition:all 1.8s ease;
+}
+.gate-frame-outer.open{
+  border-color:rgba(212,168,67,.65);
+  box-shadow:0 0 80px rgba(212,168,67,.25),inset 0 0 80px rgba(212,168,67,.06);
+}
+
+.gate-arch-top{
+  position:absolute;top:-1px;left:50%;
+  transform:translateX(-50%);
+  width:220px;height:110px;
+  border:1px solid rgba(212,168,67,.22);
+  border-bottom:none;
+  border-radius:110px 110px 0 0;
+  transition:all 1.8s ease;
+}
+.gate-arch-top.open{
+  border-color:rgba(212,168,67,.65);
+  box-shadow:0 0 40px rgba(212,168,67,.35);
+}
+
+.gate-col{
+  position:absolute;top:0;bottom:0;width:36px;
+  border:1px solid rgba(212,168,67,.14);
+  transition:border-color 1.5s ease;
+}
+.gate-col.left{left:6%}
+.gate-col.right{right:6%}
+.gate-col.open{border-color:rgba(212,168,67,.4)}
+
+.gate-door{
+  position:absolute;top:0;width:50%;height:100%;
+  background:linear-gradient(90deg,rgba(6,10,28,.97),rgba(10,18,44,.97));
+  border:1px solid rgba(212,168,67,.13);
+  transition:transform 2.4s cubic-bezier(.25,.46,.45,.94);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  pointer-events:none;
+}
+.gate-door.left-door{left:0;transform-origin:left center;border-right:none}
+.gate-door.right-door{right:0;transform-origin:right center;border-left:none}
+.gate-door.left-door.open{transform:rotateY(-78deg)}
+.gate-door.right-door.open{transform:rotateY(78deg)}
+
+.door-inner{
+  position:absolute;inset:12%;
+  border:1px solid rgba(212,168,67,.1);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color 1s ease;
+}
+.gate-door.open .door-inner{border-color:rgba(212,168,67,.25)}
+
+.door-glyph{
+  font-family:'Cinzel Decorative',serif;
+  font-size:2.2rem;
+  color:rgba(212,168,67,.13);
+  transition:color .6s;
+}
+.gate-door.open .door-glyph{color:rgba(212,168,67,.4)}
+
+.gate-light{
+  position:absolute;inset:-60%;
+  background:radial-gradient(ellipse at center,rgba(212,168,67,.18) 0%,rgba(255,240,200,.08) 25%,transparent 60%);
+  opacity:0;transition:opacity 2.5s ease;
+  pointer-events:none;
+}
+.gate-light.open{opacity:1}
+
+.gate-rays{
+  position:absolute;inset:0;
+  opacity:0;transition:opacity 2s ease 1s;
+  pointer-events:none;overflow:hidden;
+}
+.gate-rays.open{opacity:1}
+
+.gate-interior{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;transition:opacity 1.8s ease 1.2s;
+  padding:3rem;text-align:center;z-index:20;
+}
+.gate-interior.open{opacity:1}
+
+.gate-trimark{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:9px;letter-spacing:.5em;
+  color:rgba(212,168,67,.6);
+  text-transform:uppercase;margin-bottom:1.5rem;
+}
+
+.gate-cta{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(.95rem,2.5vw,1.45rem);
+  font-weight:400;color:var(--gold2);
+  line-height:1.6;
+  text-shadow:0 0 35px rgba(212,168,67,.45);
+  margin-bottom:2rem;
+}
+
+.gate-email{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;letter-spacing:.3em;
+  color:rgba(253,248,240,.7);
+  text-decoration:none;
+  border-bottom:1px solid rgba(212,168,67,.3);
+  padding-bottom:4px;
+  transition:all .3s;
+}
+.gate-email:hover{color:var(--gold);border-color:var(--gold);text-shadow:0 0 22px var(--glow)}
+
+.gate-btn{
+  position:absolute;bottom:-4.5rem;left:50%;
+  transform:translateX(-50%);
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;letter-spacing:.55em;
+  text-transform:uppercase;
+  color:var(--gold);background:rgba(4,8,26,.85);
+  border:1px solid rgba(212,168,67,.4);
+  padding:1.1rem 2.8rem;
+  cursor:pointer;white-space:nowrap;
+  transition:all .45s ease;
+  z-index:50;
+  pointer-events:all;
+}
+.gate-btn:hover{
+  border-color:var(--gold);
+  background:rgba(212,168,67,.1);
+  box-shadow:0 0 35px var(--glow);
+}
+.gate-btn.hidden{opacity:0;pointer-events:none;transition:opacity .5s}
+
+/* ── NAV ORBS ── */
+#nav-orbs{
+  position:fixed;right:2rem;top:50%;
+  transform:translateY(-50%);
+  z-index:100;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.nav-orb{
+  width:8px;height:8px;border-radius:50%;
+  border:1px solid var(--gold);background:transparent;
+  cursor:pointer;transition:all .4s ease;
+}
+.nav-orb.active,.nav-orb:hover{
+  background:var(--gold);
+  box-shadow:0 0 14px var(--glow);
+  transform:scale(1.5);
+}
+
+/* ── AUDIO ── */
+#audio-btn{
+  position:fixed;bottom:2rem;left:2rem;z-index:100;
+  background:transparent;
+  border:1px solid rgba(212,168,67,.28);
+  color:var(--gold);
+  font-family:'Josefin Sans',sans-serif;
+  font-size:9px;letter-spacing:.35em;
+  text-transform:uppercase;
+  padding:.6rem 1.3rem;cursor:pointer;
+  transition:all .3s ease;
+}
+#audio-btn:hover{
+  border-color:var(--gold);
+  background:rgba(212,168,67,.05);
+  box-shadow:0 0 22px var(--glow);
+}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:10;
+  text-align:center;
+  padding:4rem 2rem 3rem;
+  border-top:1px solid rgba(212,168,67,.04);
+}
+footer a{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:9px;letter-spacing:.45em;
+  text-transform:uppercase;
+  color:rgba(212,168,67,.28);
+  text-decoration:none;
+  transition:color .3s;
+}
+footer a:hover{color:rgba(212,168,67,.55)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1.2s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes titleReveal{
+  0%{opacity:0;transform:scale(.93);filter:drop-shadow(0 0 0 rgba(212,168,67,0))}
+  55%{opacity:1;transform:scale(1.025)}
+  100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 60px rgba(212,168,67,.55))}
+}
+@keyframes scrollPulse{
+  0%,100%{opacity:.25;transform:scaleY(.75)}
+  50%{opacity:.85;transform:scaleY(1)}
+}
+@keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.18);opacity:1}}
+@keyframes veinFlow{
+  0%,100%{top:-100%;opacity:0}
+  20%{opacity:.9}80%{opacity:.9}
+  100%{top:100%;opacity:0}
+}
+@keyframes breathe{0%,100%{opacity:.28}50%{opacity:.48}}
+@keyframes haloSpin{from{transform:translate(-50%,-62%) rotate(70deg)}to{transform:translate(-50%,-62%) rotate(430deg)}}
+@keyframes haloSpinRev{from{transform:translate(-50%,-68%) rotate(-55deg)}to{transform:translate(-50%,-68%) rotate(-415deg)}}
+@keyframes wingBreath{
+  0%,100%{transform:translate(-50%,-50%) scaleY(1)}
+  50%{transform:translate(-50%,-50%) scaleY(1.045) scaleX(1.012)}
+}
+@keyframes particleRise{
+  0%{transform:translateY(0) rotate(0);opacity:0}
+  8%{opacity:.85}
+  92%{opacity:.85}
+  100%{transform:translateY(-100vh) rotate(540deg);opacity:0}
 }
 </style>
 </head>
 <body>
 
-<!-- Custom cursor elements -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- WebGL Background Canvas -->
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<!-- Particle Overlay Canvas -->
+<canvas id="overlay-canvas" aria-hidden="true"></canvas>
 
-<!-- Sky canvas for background rendering -->
-<canvas id="sky-canvas"></canvas>
+<!-- Navigation -->
+<nav id="nav-orbs" aria-label="Realm navigation">
+  <button class="nav-orb active" data-target="realm-arrival" title="Arrival" aria-label="Arrival"></button>
+  <button class="nav-orb" data-target="realm-systems" title="Systems" aria-label="Systems"></button>
+  <button class="nav-orb" data-target="realm-intelligence" title="Intelligence" aria-label="Intelligence"></button>
+  <button class="nav-orb" data-target="realm-stability" title="Stability" aria-label="Stability"></button>
+  <button class="nav-orb" data-target="realm-ascension" title="Ascension" aria-label="Ascension"></button>
+</nav>
 
-<!-- Floating particles overlay -->
-<div class="particles-overlay" id="particles"></div>
+<!-- Audio -->
+<button id="audio-btn" aria-label="Toggle ambient sound">◎ Sound Off</button>
 
-<!-- Main scroll wrapper -->
-<div id="scroll-wrapper">
+<!-- ═══ REALM I: ARRIVAL ═══ -->
+<section id="realm-arrival" class="realm">
+  <!-- Wings SVG -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(940px,97vw);opacity:.16;animation:wingBreath 9s ease-in-out infinite;pointer-events:none;z-index:1">
+    <svg viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M450 200 C350 178 190 92 40 145 C95 198 148 218 200 228 C148 228 76 217 14 196 C78 258 182 278 282 257 C218 268 146 272 74 256 C148 308 282 318 382 287 C340 298 288 302 234 291 C328 339 420 328 450 298 Z" stroke="#d4a843" stroke-width="0.6" fill="rgba(212,168,67,0.025)"/>
+      <path d="M450 200 C550 178 710 92 860 145 C805 198 752 218 700 228 C752 228 824 217 886 196 C822 258 718 278 618 257 C682 268 754 272 826 256 C752 308 618 318 518 287 C560 298 612 302 666 291 C572 339 480 328 450 298 Z" stroke="#d4a843" stroke-width="0.6" fill="rgba(212,168,67,0.025)"/>
+      <!-- Feather detail lines -->
+      <line x1="450" y1="200" x2="120" y2="165" stroke="#d4a843" stroke-width="0.3" opacity="0.35"/>
+      <line x1="450" y1="200" x2="180" y2="185" stroke="#d4a843" stroke-width="0.3" opacity="0.3"/>
+      <line x1="450" y1="200" x2="240" y2="198" stroke="#d4a843" stroke-width="0.3" opacity="0.25"/>
+      <line x1="450" y1="200" x2="300" y2="207" stroke="#d4a843" stroke-width="0.3" opacity="0.2"/>
+      <line x1="450" y1="200" x2="780" y2="165" stroke="#d4a843" stroke-width="0.3" opacity="0.35"/>
+      <line x1="450" y1="200" x2="720" y2="185" stroke="#d4a843" stroke-width="0.3" opacity="0.3"/>
+      <line x1="450" y1="200" x2="660" y2="198" stroke="#d4a843" stroke-width="0.3" opacity="0.25"/>
+      <line x1="450" y1="200" x2="600" y2="207" stroke="#d4a843" stroke-width="0.3" opacity="0.2"/>
+    </svg>
+  </div>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="#arrival" class="nav-logo">𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓</a>
-    <ul class="nav-links">
-      <li><a href="#systems">Systems</a></li>
-      <li><a href="#intelligence">Intelligence</a></li>
-      <li><a href="#stability">Stability</a></li>
-      <li><a href="#ascension">Contact</a></li>
-    </ul>
-  </nav>
+  <!-- Halo rings -->
+  <div style="position:absolute;top:50%;left:50%;width:clamp(320px,52vw,640px);height:clamp(88px,14vw,175px);border:1px solid rgba(212,168,67,.22);border-radius:50%;animation:haloSpin 22s linear infinite;pointer-events:none;z-index:1;transform:translate(-50%,-62%) rotate(70deg)"></div>
+  <div style="position:absolute;top:50%;left:50%;width:clamp(220px,37vw,460px);height:clamp(62px,10vw,126px);border:1px solid rgba(212,168,67,.14);border-radius:50%;animation:haloSpinRev 16s linear infinite;pointer-events:none;z-index:1;transform:translate(-50%,-68%) rotate(-55deg)"></div>
 
-  <!-- ===================== SECTION 1: ARRIVAL ===================== -->
-  <section id="arrival">
+  <div style="position:relative;z-index:5;text-align:center">
+    <p class="eyebrow">A Digital Realm</p>
+    <h1 class="devotion-title">DEVOTION</h1>
+    <p class="arrival-sub">Enter where craftsmanship becomes eternal</p>
+    <div class="diamonds">
+      <span>◆</span><span>◇</span><span class="big">◆</span><span>◇</span><span>◆</span>
+    </div>
+  </div>
 
-    <!-- Distant island shapes -->
-    <div class="island-left"></div>
-    <div class="island-right"></div>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <label>Descend</label>
+  </div>
+</section>
 
-    <!-- Hero content -->
-    <div class="hero-content">
-      <span class="rune-line" id="rune-tag">✦ &nbsp; Portfolio &nbsp; ✦</span>
+<!-- ═══ REALM II: SYSTEMS ═══ -->
+<section id="realm-systems" class="realm">
+  <div class="sacred-line" style="margin-bottom:3rem"></div>
+  <p class="realm-subhead reveal">◆ Systems ◆</p>
+  <h2 class="realm-heading reveal" style="transition-delay:.15s">The Celestial City</h2>
 
-      <h1 class="hero-name" id="hero-name">𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓</h1>
+  <div class="citadel-grid reveal" style="transition-delay:.3s">
+    <div class="citadel">
+      <div class="citadel-arch"></div>
+      <div class="citadel-pillar-l"></div>
+      <div class="citadel-pillar-r"></div>
+      <div class="citadel-num">I</div>
+      <div class="citadel-title">Backend Architecture</div>
+      <div class="citadel-desc">Distributed systems forged for resilience. APIs sculpted with precision. Every endpoint a portal between worlds.</div>
+      <div class="citadel-beam"></div>
+    </div>
+    <div class="citadel">
+      <div class="citadel-arch"></div>
+      <div class="citadel-pillar-l"></div>
+      <div class="citadel-pillar-r"></div>
+      <div class="citadel-num">II</div>
+      <div class="citadel-title">Realtime Systems</div>
+      <div class="citadel-desc">Data flowing like celestial rivers. Event-driven architectures breathing in synchrony with the cosmos.</div>
+      <div class="citadel-beam"></div>
+    </div>
+    <div class="citadel">
+      <div class="citadel-arch"></div>
+      <div class="citadel-pillar-l"></div>
+      <div class="citadel-pillar-r"></div>
+      <div class="citadel-num">III</div>
+      <div class="citadel-title">Data Engineering</div>
+      <div class="citadel-desc">Pipelines carved from pure logic. Transformations that transmute raw signal into wisdom.</div>
+      <div class="citadel-beam"></div>
+    </div>
+    <div class="citadel">
+      <div class="citadel-arch"></div>
+      <div class="citadel-pillar-l"></div>
+      <div class="citadel-pillar-r"></div>
+      <div class="citadel-num">IV</div>
+      <div class="citadel-title">Infrastructure</div>
+      <div class="citadel-desc">The invisible foundation beneath. Scalable. Silent. Eternal. Like the pillars of an ancient sky-city.</div>
+      <div class="citadel-beam"></div>
+    </div>
+  </div>
+  <div class="sacred-line reveal" style="margin-top:4rem;transition-delay:.5s"></div>
+</section>
 
-      <div class="sacred-divider" id="hero-divider"></div>
+<!-- ═══ REALM III: INTELLIGENCE ═══ -->
+<section id="realm-intelligence" class="realm">
+  <div class="sacred-line" style="margin-bottom:3rem"></div>
+  <p class="realm-subhead reveal">◆ Intelligence ◆</p>
+  <h2 class="realm-heading reveal" style="transition-delay:.15s">The Divine Engine</h2>
 
-      <p class="hero-roles" id="hero-roles">Systems Engineer &nbsp;•&nbsp; Backend &nbsp;•&nbsp; AI &nbsp;•&nbsp; Realtime Systems</p>
+  <div class="engine-wrapper reveal" style="transition-delay:.3s">
+    <!-- Rotating rings -->
+    <div class="ring r1"><div class="ring-orb"></div></div>
+    <div class="ring r2"><div class="ring-orb"></div></div>
+    <div class="ring r3"><div class="ring-orb"></div></div>
+    <div class="ring r4"><div class="ring-orb"></div></div>
+    <div class="ring r5"></div>
 
-      <p class="hero-desc" id="hero-desc">
-        Crafting scalable backend systems, intelligent workflows,
-        and immersive digital experiences above the ordinary.
-      </p>
+    <!-- Sacred hexagon -->
+    <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38%;height:38%;opacity:.14" viewBox="0 0 100 100">
+      <polygon points="50,5 93,27.5 93,72.5 50,95 7,72.5 7,27.5" fill="none" stroke="#d4a843" stroke-width="0.5"/>
+      <polygon points="50,15 83,32.5 83,67.5 50,85 17,67.5 17,32.5" fill="none" stroke="#d4a843" stroke-width="0.5"/>
+      <line x1="50" y1="5" x2="50" y2="95" stroke="#d4a843" stroke-width="0.3" opacity="0.5"/>
+      <line x1="7" y1="27.5" x2="93" y2="72.5" stroke="#d4a843" stroke-width="0.3" opacity="0.5"/>
+      <line x1="93" y1="27.5" x2="7" y2="72.5" stroke="#d4a843" stroke-width="0.3" opacity="0.5"/>
+    </svg>
 
-      <div class="cta-group" id="hero-cta">
-        <a href="#systems" class="btn-primary">Enter The World</a>
-        <a href="#ascension" class="btn-secondary">Contact</a>
+    <!-- Center -->
+    <div class="engine-center">
+      <div class="engine-pulse"></div>
+      <div class="engine-label">INTELLIGENCE</div>
+    </div>
+  </div>
+
+  <div class="intel-cards">
+    <div class="intel-card reveal" style="transition-delay:.5s">
+      <div class="intel-lbl">Machine Learning</div>
+      <div class="intel-name">Predictive Intelligence</div>
+      <div class="intel-body">Models that peer into the pattern beneath the pattern. Neural architectures mirroring the geometry of thought itself.</div>
+    </div>
+    <div class="intel-card reveal" style="transition-delay:.65s">
+      <div class="intel-lbl">Natural Language</div>
+      <div class="intel-name">Linguistic Alchemy</div>
+      <div class="intel-body">Language understood at its roots. Systems that read between the syllables and answer with precision.</div>
+    </div>
+    <div class="intel-card reveal" style="transition-delay:.8s">
+      <div class="intel-lbl">Computer Vision</div>
+      <div class="intel-name">The Seeing Eye</div>
+      <div class="intel-body">Teaching machines to behold what exists. Feature spaces mapped across infinite dimensional skies.</div>
+    </div>
+    <div class="intel-card reveal" style="transition-delay:.95s">
+      <div class="intel-lbl">Data Science</div>
+      <div class="intel-name">Signal &amp; Oracle</div>
+      <div class="intel-body">Extracting truth from noise. Transforming measurement into meaning. Numbers becoming prophecy.</div>
+    </div>
+  </div>
+  <div class="sacred-line reveal" style="margin-top:4rem;transition-delay:1.1s"></div>
+</section>
+
+<!-- ═══ REALM IV: STABILITY ═══ -->
+<section id="realm-stability" class="realm">
+  <div class="sacred-line" style="margin-bottom:3rem"></div>
+  <p class="realm-subhead reveal">◆ Stability ◆</p>
+  <h2 class="realm-heading reveal" style="transition-delay:.15s">Three Eternal Pillars</h2>
+
+  <div class="pillars-row">
+    <div class="pillar reveal" style="transition-delay:.3s">
+      <div class="pillar-cap"><div class="pillar-cap-title">Testing</div></div>
+      <div class="pillar-shaft" style="height:340px">
+        <div class="pillar-vein"></div>
+        <div class="pillar-metrics">
+          <div class="m-row"><span class="m-lbl">Coverage</span><span class="m-val">99.7%</span></div>
+          <div class="m-track"><div class="m-fill" data-width="99.7%"></div></div>
+          <div class="m-row" style="margin-top:.9rem"><span class="m-lbl">Reliability</span><span class="m-val">99.9%</span></div>
+          <div class="m-track"><div class="m-fill" data-width="99.9%"></div></div>
+        </div>
       </div>
+      <div class="pillar-base"></div>
+      <p class="pillar-desc">Every edge case an eternity. No fault survives the crucible.</p>
     </div>
 
-    <!-- Scroll indicator -->
-    <div class="scroll-hint" id="scroll-hint">
-      <span>Scroll to descend</span>
-      <div class="scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- Sky bridge transition -->
-  <div class="sky-bridge"></div>
-
-  <!-- ===================== SECTION 2: SYSTEMS ISLAND ===================== -->
-  <section id="systems" class="island-section">
-    <div class="island-container">
-
-      <div class="island-header reveal">
-        <span class="island-tag">Island I — The Forge</span>
-        <h2 class="island-title">Systems &amp; Architecture</h2>
-        <p class="island-subtitle">
-          Ancient mechanisms that carry the weight of civilization.
-          Infrastructure carved from precision and intent.
-        </p>
+    <div class="pillar reveal" style="transition-delay:.48s">
+      <div class="pillar-cap"><div class="pillar-cap-title">Deployment</div></div>
+      <div class="pillar-shaft" style="height:420px">
+        <div class="pillar-vein"></div>
+        <div class="pillar-metrics">
+          <div class="m-row"><span class="m-lbl">Uptime</span><span class="m-val">99.99%</span></div>
+          <div class="m-track"><div class="m-fill" data-width="99.99%"></div></div>
+          <div class="m-row" style="margin-top:.9rem"><span class="m-lbl">Deploy Time</span><span class="m-val">&lt; 2min</span></div>
+          <div class="m-track"><div class="m-fill" data-width="90%"></div></div>
+        </div>
       </div>
-
-      <!-- Energy flow bar representing APIs -->
-      <div class="energy-bar reveal"></div>
-
-      <div class="systems-grid">
-
-        <!-- Card 1: Backend -->
-        <div class="glass-card skill-card reveal">
-          <span class="card-glyph">⚙️</span>
-          <h3 class="card-title">Backend Architecture</h3>
-          <p class="card-desc">
-            Spring Boot services woven into living architectures.
-            RESTful APIs that speak clearly across the sky.
-          </p>
-          <div class="tech-tags">
-            <span class="tag">Spring Boot</span>
-            <span class="tag">REST API</span>
-            <span class="tag">Java</span>
-            <span class="tag">Microservices</span>
-          </div>
-        </div>
-
-        <!-- Card 2: Realtime -->
-        <div class="glass-card skill-card reveal">
-          <span class="card-glyph">⚡</span>
-          <h3 class="card-title">Realtime Systems</h3>
-          <p class="card-desc">
-            WebSocket bridges between worlds. Live data
-            flowing like wind through suspended pathways.
-          </p>
-          <div class="tech-tags">
-            <span class="tag">WebSockets</span>
-            <span class="tag">Event Streams</span>
-            <span class="tag">Kafka</span>
-            <span class="tag">Redis</span>
-          </div>
-        </div>
-
-        <!-- Card 3: Data -->
-        <div class="glass-card skill-card reveal">
-          <span class="card-glyph">🗃️</span>
-          <h3 class="card-title">Data Engineering</h3>
-          <p class="card-desc">
-            PostgreSQL vaults guarding the knowledge of ages.
-            Queries shaped with the patience of ancient craftsmen.
-          </p>
-          <div class="tech-tags">
-            <span class="tag">PostgreSQL</span>
-            <span class="tag">SQL</span>
-            <span class="tag">Schema Design</span>
-          </div>
-        </div>
-
-        <!-- Card 4: Infrastructure -->
-        <div class="glass-card skill-card reveal">
-          <span class="card-glyph">🏗️</span>
-          <h3 class="card-title">Infrastructure</h3>
-          <p class="card-desc">
-            Docker vessels carrying services across clouds.
-            Environments sealed, portable, and sovereign.
-          </p>
-          <div class="tech-tags">
-            <span class="tag">Docker</span>
-            <span class="tag">CI/CD</span>
-            <span class="tag">Linux</span>
-            <span class="tag">DevOps</span>
-          </div>
-        </div>
-
-      </div><!-- end systems-grid -->
+      <div class="pillar-base"></div>
+      <p class="pillar-desc">Zero-downtime releases. Canary wisdom. The system breathes on.</p>
     </div>
-  </section>
 
-  <div class="sky-bridge"></div>
-
-  <!-- ===================== SECTION 3: INTELLIGENCE ISLAND ===================== -->
-  <section id="intelligence" class="island-section">
-    <div class="island-container">
-
-      <div class="island-header reveal">
-        <span class="island-tag">Island II — The Sanctum</span>
-        <h2 class="island-title">Intelligence &amp; Automation</h2>
-        <p class="island-subtitle">
-          Where ancient runes become reasoning machines.
-          Knowledge encoded in living light.
-        </p>
+    <div class="pillar reveal" style="transition-delay:.66s">
+      <div class="pillar-cap"><div class="pillar-cap-title">Reliability</div></div>
+      <div class="pillar-shaft" style="height:380px">
+        <div class="pillar-vein"></div>
+        <div class="pillar-metrics">
+          <div class="m-row"><span class="m-lbl">MTTR</span><span class="m-val">&lt; 5min</span></div>
+          <div class="m-track"><div class="m-fill" data-width="95%"></div></div>
+          <div class="m-row" style="margin-top:.9rem"><span class="m-lbl">SLA</span><span class="m-val">99.95%</span></div>
+          <div class="m-track"><div class="m-fill" data-width="99.95%"></div></div>
+        </div>
       </div>
-
-      <div class="intelligence-layout">
-
-        <!-- Left: orbital visualization -->
-        <div class="neural-visual reveal">
-          <div class="orbit-container">
-            <!-- Outer ring -->
-            <div class="orbit-ring">
-              <div class="orbit-node"></div>
-            </div>
-            <!-- Middle ring -->
-            <div class="orbit-ring">
-              <div class="orbit-node"></div>
-            </div>
-            <!-- Inner ring -->
-            <div class="orbit-ring">
-              <div class="orbit-node"></div>
-            </div>
-            <!-- Center sphere -->
-            <div class="center-orb">✦</div>
-          </div>
-        </div>
-
-        <!-- Right: intelligence capabilities -->
-        <div class="intelligence-content">
-
-          <div class="rune-item reveal">
-            <span class="rune-symbol">🌿</span>
-            <div class="rune-text">
-              <h4>AI Integration</h4>
-              <p>Weaving language models into backend systems. Conversations that carry purpose.</p>
-            </div>
-          </div>
-
-          <div class="rune-item reveal">
-            <span class="rune-symbol">🔮</span>
-            <div class="rune-text">
-              <h4>Intelligent Workflows</h4>
-              <p>Automating the repetitive so the essential may breathe. Systems that learn their place in the world.</p>
-            </div>
-          </div>
-
-          <div class="rune-item reveal">
-            <span class="rune-symbol">🌌</span>
-            <div class="rune-text">
-              <h4>Semantic Systems</h4>
-              <p>Vector search and meaning-aware retrieval. Finding signal within infinite noise.</p>
-            </div>
-          </div>
-
-          <div class="rune-item reveal">
-            <span class="rune-symbol">⚗️</span>
-            <div class="rune-text">
-              <h4>Data Pipelines</h4>
-              <p>Transforming raw material into refined knowledge. Processing flows built to endure.</p>
-            </div>
-          </div>
-
-        </div><!-- end intelligence-content -->
-      </div><!-- end intelligence-layout -->
+      <div class="pillar-base"></div>
+      <p class="pillar-desc">Fault-tolerant by design. Chaos-resilient by nature.</p>
     </div>
-  </section>
+  </div>
+  <div class="sacred-line reveal" style="margin-top:4rem;transition-delay:.8s"></div>
+</section>
 
-  <div class="sky-bridge"></div>
+<!-- ═══ REALM V: ASCENSION ═══ -->
+<section id="realm-ascension" class="realm">
+  <div class="sacred-line" style="margin-bottom:3rem"></div>
+  <p class="realm-subhead reveal">◆ Contact ◆</p>
+  <h2 class="realm-heading reveal" style="transition-delay:.15s">The Ascension Gate</h2>
 
-  <!-- ===================== SECTION 4: STABILITY ISLAND ===================== -->
-  <section id="stability" class="island-section">
-    <div class="island-container">
+  <div style="perspective:1400px;width:min(580px,92vw);margin:0 auto">
+  <div class="gate-scene reveal" style="transition-delay:.35s" id="gate-scene">
+    <div class="gate-light" id="gate-light"></div>
+    <div class="gate-frame-outer" id="gate-frame"></div>
+    <div class="gate-arch-top" id="gate-arch"></div>
+    <div class="gate-col left" id="gate-col-l"></div>
+    <div class="gate-col right" id="gate-col-r"></div>
 
-      <div class="island-header reveal">
-        <span class="island-tag">Island III — The Anchor</span>
-        <h2 class="island-title">Stability &amp; Craft</h2>
-        <p class="island-subtitle">
-          The ancient pillars that keep the islands aloft.
-          Engineering discipline in its most sacred form.
-        </p>
-      </div>
+    <!-- Gate rays SVG -->
+    <svg class="gate-rays" id="gate-rays" style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 580 680">
+      <defs><radialGradient id="rayGrad" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#d4a843" stop-opacity="0.25"/><stop offset="100%" stop-color="#d4a843" stop-opacity="0"/></radialGradient></defs>
+      <ellipse cx="290" cy="340" rx="200" ry="260" fill="url(#rayGrad)"/>
+      <line x1="290" y1="340" x2="290" y2="0" stroke="#f0c96e" stroke-width="0.5" opacity="0.3"/>
+      <line x1="290" y1="340" x2="500" y2="60" stroke="#f0c96e" stroke-width="0.5" opacity="0.25"/>
+      <line x1="290" y1="340" x2="80" y2="60" stroke="#f0c96e" stroke-width="0.5" opacity="0.25"/>
+      <line x1="290" y1="340" x2="580" y2="200" stroke="#f0c96e" stroke-width="0.5" opacity="0.18"/>
+      <line x1="290" y1="340" x2="0" y2="200" stroke="#f0c96e" stroke-width="0.5" opacity="0.18"/>
+    </svg>
 
-      <div class="stability-grid">
-
-        <!-- Pillar 1: Testing -->
-        <div class="glass-card pillar-card reveal">
-          <span class="pillar-symbol">⚓</span>
-          <h3 class="pillar-name">Testing</h3>
-          <p class="pillar-desc">
-            End-to-end confidence through Cypress and Maestro.
-            Every path walked before the world sees it.
-          </p>
-          <div class="stability-meter">
-            <div class="stability-fill" style="width: 92%"></div>
-          </div>
-        </div>
-
-        <!-- Pillar 2: Deployment -->
-        <div class="glass-card pillar-card reveal">
-          <span class="pillar-symbol">🏛️</span>
-          <h3 class="pillar-name">Deployment</h3>
-          <p class="pillar-desc">
-            Dockerized environments released with ceremony.
-            No chaos. No surprises. Only precision.
-          </p>
-          <div class="stability-meter">
-            <div class="stability-fill" style="width: 88%"></div>
-          </div>
-        </div>
-
-        <!-- Pillar 3: Reliability -->
-        <div class="glass-card pillar-card reveal">
-          <span class="pillar-symbol">🗼</span>
-          <h3 class="pillar-name">Reliability</h3>
-          <p class="pillar-desc">
-            Systems that endure. Code reviewed as scripture.
-            The engineer remains when the hype fades.
-          </p>
-          <div class="stability-meter">
-            <div class="stability-fill" style="width: 95%"></div>
-          </div>
-        </div>
-
-      </div><!-- end stability-grid -->
+    <div class="gate-door left-door" id="gate-left">
+      <div class="door-inner"><div class="door-glyph">◈</div></div>
     </div>
-  </section>
-
-  <div class="sky-bridge"></div>
-
-  <!-- ===================== SECTION 5: FINAL ASCENSION ===================== -->
-  <section id="ascension">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;position:relative;z-index:5;">
-
-      <!-- Sacred gate -->
-      <div class="temple-gate reveal">
-        <div class="gate-left"></div>
-        <div class="gate-right"></div>
-        <div class="gate-top"></div>
-        <span class="gate-glyph">✦</span>
-      </div>
-
-      <span class="island-tag reveal">Final Island — The Summit</span>
-
-      <h2 class="ascension-tagline reveal">
-        Let's build something worthy of this world.
-      </h2>
-
-      <p class="ascension-sub reveal">
-        The architect is available. Rare collaborations considered.
-      </p>
-
-      <!-- Contact vessel -->
-      <div class="contact-vessel reveal">
-        <a href="mailto:m0hzawork1@gmail.com" class="contact-email">
-          m0hzawork1@gmail.com
-        </a>
-      </div>
-
+    <div class="gate-door right-door" id="gate-right">
+      <div class="door-inner"><div class="door-glyph">◈</div></div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer-rune" style="position:absolute;bottom:2rem;left:0;right:0;text-align:center;">
-      ✦ &nbsp; 𝕯𝖊𝖛𝖔𝖙𝖎𝖔𝖓 &nbsp; ✦ &nbsp; Architect of Intelligent Worlds &nbsp; ✦
+    <div class="gate-interior" id="gate-interior">
+      <p class="gate-trimark">◆ ◆ ◆</p>
+      <p class="gate-cta">Let us build something<br>worthy of remembrance</p>
+      <a href="mailto:m0hzawork1@gmail.com" class="gate-email">m0hzawork1@gmail.com</a>
     </div>
-  </section>
 
-</div><!-- end scroll-wrapper -->
+    <button class="gate-btn" id="gate-btn" onclick="openGate()">Open the Gate</button>
+  </div><!-- /gate-scene -->
+  </div><!-- /perspective-wrapper -->
+</section>
 
+<footer>
+  <a href="https://asha.mohamad-ismail-asha.workers.dev/" target="_blank" rel="noopener noreferrer">Crafted by Mohammed Ismail Asha</a>
+</footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ============================================================
-   MAIN SCRIPT
-   All the motion, animation, and life of the portfolio world.
-   ============================================================ */
+// ═══════════════════════════════════════════════════════
+//  DEVOTION — CELESTIAL REALM
+//  WebGL Environment, Particles, Interactions
+// ═══════════════════════════════════════════════════════
 
-/* ----------------------------------------------------------
-   1. LENIS SMOOTH SCROLL SETUP
-   Makes scrolling feel like gliding through the sky
-   ---------------------------------------------------------- */
-const lenis = new Lenis({
-  duration: 1.6,        // Slower = more cinematic glide
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth ease out
-  smooth: true,
-});
+// ── WEBGL BACKGROUND ──────────────────────────────────
+(function initWebGL(){
+  const canvas = document.getElementById('webgl-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x04081a, 1);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Connect Lenis to GSAP's ticker so they sync perfectly
-function lenisRaf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(lenisRaf);
-}
-requestAnimationFrame(lenisRaf);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+  camera.position.set(0, 0, 80);
 
-// Tell ScrollTrigger to use Lenis scroll position
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.lagSmoothing(0);
+  // ── FOG ──
+  scene.fog = new THREE.FogExp2(0x04081a, 0.0018);
 
-/* ----------------------------------------------------------
-   2. GSAP + SCROLLTRIGGER REGISTRATION
-   ---------------------------------------------------------- */
-gsap.registerPlugin(ScrollTrigger);
+  // ── STAR FIELD ──
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 3000;
+  const starPos = new Float32Array(starCount * 3);
+  const starSizes = new Float32Array(starCount);
+  for(let i=0;i<starCount;i++){
+    starPos[i*3]   = (Math.random()-0.5)*2000;
+    starPos[i*3+1] = (Math.random()-0.5)*2000;
+    starPos[i*3+2] = (Math.random()-0.5)*1000 - 200;
+    starSizes[i] = Math.random()*2.8+0.4;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos,3));
+  starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes,1));
 
-/* ----------------------------------------------------------
-   3. CUSTOM CURSOR
-   Tracks mouse with slight lag for elegance
-   ---------------------------------------------------------- */
-const cursor = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursorRing');
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  // Dot follows instantly
-  cursor.style.left = mouseX + 'px';
-  cursor.style.top  = mouseY + 'px';
-});
-
-// Ring follows with lag (smooth trailing)
-function updateRing() {
-  ringX += (mouseX - ringX) * 0.12;
-  ringY += (mouseY - ringY) * 0.12;
-  cursorRing.style.left = ringX + 'px';
-  cursorRing.style.top  = ringY + 'px';
-  requestAnimationFrame(updateRing);
-}
-updateRing();
-
-// Scale up cursor on hoverable elements
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width = '20px';
-    cursor.style.height = '20px';
-    cursorRing.style.width = '60px';
-    cursorRing.style.height = '60px';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width = '10px';
-    cursor.style.height = '10px';
-    cursorRing.style.width = '36px';
-    cursorRing.style.height = '36px';
-  });
-});
-
-/* ----------------------------------------------------------
-   4. SKY CANVAS — The living atmospheric background
-   Draws: gradient sky, slow-moving clouds, distant birds
-   ---------------------------------------------------------- */
-const canvas = document.getElementById('sky-canvas');
-const ctx = canvas.getContext('2d');
-let w, h;
-
-// Resize canvas to fill window
-function resizeCanvas() {
-  w = canvas.width  = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-/* Cloud data — each cloud is an object with position and drift speed */
-const clouds = Array.from({ length: 12 }, (_, i) => ({
-  x: Math.random() * 2000 - 500,  // Spread across wide range
-  y: Math.random() * h * 0.8,
-  width: 200 + Math.random() * 300,
-  height: 40 + Math.random() * 60,
-  speed: 0.08 + Math.random() * 0.15,  // Very slow drift
-  opacity: 0.04 + Math.random() * 0.08,
-}));
-
-/* Distant bird data — tiny moving specks */
-const birds = Array.from({ length: 8 }, () => ({
-  x: Math.random() * w,
-  y: 50 + Math.random() * h * 0.4,
-  speed: 0.3 + Math.random() * 0.5,
-  size: 1 + Math.random() * 2,
-  opacity: 0.15 + Math.random() * 0.25,
-}));
-
-let scrollY = 0;
-window.addEventListener('scroll', () => { scrollY = window.scrollY; });
-
-/* Main canvas draw loop */
-function drawSky() {
-  ctx.clearRect(0, 0, w, h);
-
-  // Deep sky gradient — top to middle
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
-  skyGrad.addColorStop(0,   '#050d1a');   // Very deep navy at top
-  skyGrad.addColorStop(0.3, '#0a1628');   // Deep blue
-  skyGrad.addColorStop(0.6, '#0f2240');   // Slightly lighter
-  skyGrad.addColorStop(1,   '#0a1628');   // Back to dark at bottom
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, w, h);
-
-  // Atmospheric glow — a soft sun bloom on the horizon
-  const bloomX = w * 0.5 + Math.sin(Date.now() * 0.0003) * 50;
-  const bloom = ctx.createRadialGradient(bloomX, h * 0.45, 0, bloomX, h * 0.45, h * 0.5);
-  bloom.addColorStop(0,   'rgba(201, 168, 76, 0.06)');
-  bloom.addColorStop(0.4, 'rgba(168, 216, 234, 0.04)');
-  bloom.addColorStop(1,   'transparent');
-  ctx.fillStyle = bloom;
-  ctx.fillRect(0, 0, w, h);
-
-  // Draw clouds with slow parallax tied to scroll
-  clouds.forEach(cloud => {
-    // Drift clouds slowly to the right
-    cloud.x += cloud.speed;
-    if (cloud.x > w + 500) cloud.x = -600; // Wrap around
-
-    // Parallax offset: deeper clouds move less
-    const parallaxOffset = scrollY * 0.05 * cloud.speed;
-
-    ctx.save();
-    ctx.globalAlpha = cloud.opacity;
-
-    // Draw ellipse for cloud
-    const grad = ctx.createRadialGradient(
-      cloud.x, cloud.y - parallaxOffset, 0,
-      cloud.x, cloud.y - parallaxOffset, cloud.width * 0.5
-    );
-    grad.addColorStop(0,   'rgba(200, 220, 255, 0.9)');
-    grad.addColorStop(0.5, 'rgba(180, 210, 240, 0.5)');
-    grad.addColorStop(1,   'transparent');
-
-    ctx.beginPath();
-    ctx.ellipse(
-      cloud.x, cloud.y - parallaxOffset,
-      cloud.width * 0.5, cloud.height * 0.5,
-      0, 0, Math.PI * 2
-    );
-    ctx.fillStyle = grad;
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // Draw distant birds as tiny V shapes
-  birds.forEach(bird => {
-    bird.x += bird.speed;
-    if (bird.x > w + 20) bird.x = -20; // Wrap
-
-    ctx.save();
-    ctx.globalAlpha = bird.opacity;
-    ctx.strokeStyle = 'rgba(200, 220, 255, 0.8)';
-    ctx.lineWidth = bird.size * 0.5;
-    ctx.beginPath();
-    // Simple V shape for bird silhouette
-    ctx.moveTo(bird.x - bird.size * 3, bird.y);
-    ctx.lineTo(bird.x, bird.y - bird.size * 2);
-    ctx.lineTo(bird.x + bird.size * 3, bird.y);
-    ctx.stroke();
-    ctx.restore();
-  });
-
-  // Request next frame — keeps animation running
-  requestAnimationFrame(drawSky);
-}
-drawSky(); // Start the sky
-
-/* ----------------------------------------------------------
-   5. FLOATING PARTICLES
-   Small glowing dots that drift upward like fireflies/spores
-   ---------------------------------------------------------- */
-const particleContainer = document.getElementById('particles');
-const PARTICLE_COUNT = 40; // Keep count low for performance
-
-for (let i = 0; i < PARTICLE_COUNT; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-
-  // Randomize each particle's properties
-  const size    = 1 + Math.random() * 3;
-  const left    = Math.random() * 100;
-  const dur     = 15 + Math.random() * 25;  // Duration in seconds
-  const delay   = Math.random() * -30;       // Negative delay starts mid-animation
-  const driftS  = (Math.random() - 0.5) * 100; // Horizontal drift start
-  const driftE  = (Math.random() - 0.5) * 100; // Horizontal drift end
-  const maxOp   = 0.2 + Math.random() * 0.4;
-
-  // Gold or teal particles randomly
-  const isGold  = Math.random() > 0.5;
-  const color   = isGold
-    ? `rgba(201, 168, 76, ${maxOp})`
-    : `rgba(78, 205, 196, ${maxOp})`;
-
-  // Apply styles via CSS custom properties (variables)
-  p.style.cssText = `
-    width: ${size}px;
-    height: ${size}px;
-    left: ${left}%;
-    background: ${color};
-    box-shadow: 0 0 ${size * 3}px ${color};
-    --duration: ${dur}s;
-    --delay: ${delay}s;
-    --drift-start: ${driftS}px;
-    --drift-end: ${driftE}px;
-    --max-opacity: ${maxOp};
-    animation-duration: ${dur}s;
-    animation-delay: ${delay}s;
-  `;
-
-  particleContainer.appendChild(p);
-}
-
-/* ----------------------------------------------------------
-   6. HERO ENTRANCE ANIMATION
-   Elements fade and rise into view on page load
-   ---------------------------------------------------------- */
-const heroTimeline = gsap.timeline({ delay: 0.3 });
-
-heroTimeline
-  .to('#rune-tag',     { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 0)
-  .to('#hero-name',    { opacity: 1, y: 0, duration: 1.4,  ease: 'power3.out' }, 0.3)
-  .to('#hero-divider', { opacity: 1, y: 0, duration: 0.8,  ease: 'power2.out' }, 0.9)
-  .to('#hero-roles',   { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.1)
-  .to('#hero-desc',    { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.4)
-  .to('#hero-cta',     { opacity: 1, y: 0, duration: 1,    ease: 'power2.out' }, 1.7)
-  .to('#scroll-hint',  { opacity: 1, duration: 1 }, 2.2);
-
-/* ----------------------------------------------------------
-   7. SCROLL REVEAL ANIMATIONS
-   Elements with class "reveal" animate in when scrolled to
-   ---------------------------------------------------------- */
-document.querySelectorAll('.reveal').forEach(el => {
-  gsap.fromTo(el,
-    { opacity: 0, y: 40 },  // Start: invisible, shifted down
-    {
-      opacity: 1,
-      y: 0,
-      duration: 1.1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 85%',    // Trigger when element is 85% from top of viewport
-        toggleActions: 'play none none none',  // Only plays once
+  const starMat = new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0},uColor:{value:new THREE.Color(0xfff8e7)}},
+    vertexShader:`
+      attribute float size;
+      uniform float uTime;
+      varying float vAlpha;
+      void main(){
+        vec3 p=position;
+        vAlpha=0.4+0.6*sin(uTime*0.8+p.x*0.05+p.y*0.03);
+        gl_PointSize=size*(0.85+0.15*sin(uTime+p.z*0.02));
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);
       }
-    }
-  );
-});
-
-/* ----------------------------------------------------------
-   8. PARALLAX ON HERO NAME
-   Subtle vertical shift as you scroll away from hero
-   ---------------------------------------------------------- */
-gsap.to('#hero-name', {
-  yPercent: -20,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#arrival',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: true,  // Ties animation directly to scroll position
-  }
-});
-
-/* Also fade the whole hero content as we scroll past it */
-gsap.to('.hero-content', {
-  opacity: 0,
-  scale: 0.95,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#arrival',
-    start: '60% top',
-    end: 'bottom top',
-    scrub: true,
-  }
-});
-
-/* ----------------------------------------------------------
-   9. STABILITY METERS — Animated fill on scroll into view
-   ---------------------------------------------------------- */
-document.querySelectorAll('.stability-fill').forEach(bar => {
-  const targetWidth = bar.style.width; // Save the target width
-  bar.style.width = '0%';             // Start at 0
-
-  ScrollTrigger.create({
-    trigger: bar,
-    start: 'top 90%',
-    onEnter: () => {
-      // Animate to the target width
-      bar.style.transition = 'width 1.8s ease';
-      bar.style.width = targetWidth;
-    }
-  });
-});
-
-/* ----------------------------------------------------------
-   10. SUBTLE MOUSE PARALLAX on hero section
-   The name and desc shift slightly with mouse movement
-   ---------------------------------------------------------- */
-let mouseParallaxX = 0, mouseParallaxY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  // Normalize mouse to -1..1 range
-  mouseParallaxX = (e.clientX / window.innerWidth  - 0.5) * 2;
-  mouseParallaxY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-// Smoothly apply parallax in animation frame loop
-let pX = 0, pY = 0;
-function mouseParallax() {
-  pX += (mouseParallaxX - pX) * 0.05;
-  pY += (mouseParallaxY - pY) * 0.05;
-
-  // Only apply when near the top of the page
-  if (window.scrollY < window.innerHeight) {
-    const factor = 1 - window.scrollY / window.innerHeight;
-    gsap.set('#hero-name', {
-      x: pX * 12 * factor,
-      y: pY * 8  * factor,
-    });
-    gsap.set('.island-left', {
-      x: pX * 25 * factor,
-      y: pY * 15 * factor,
-    });
-    gsap.set('.island-right', {
-      x: pX * -20 * factor,
-      y: pY * 12  * factor,
-    });
-  }
-
-  requestAnimationFrame(mouseParallax);
-}
-mouseParallax();
-
-/* ----------------------------------------------------------
-   11. ISLAND SECTION ENTRY EFFECTS
-   Each section subtly scales in as it enters viewport
-   ---------------------------------------------------------- */
-['#systems', '#intelligence', '#stability', '#ascension'].forEach(id => {
-  gsap.fromTo(id,
-    { scale: 0.97 },
-    {
-      scale: 1,
-      ease: 'power2.out',
-      duration: 1.2,
-      scrollTrigger: {
-        trigger: id,
-        start: 'top 90%',
-        toggleActions: 'play none none none',
+    `,
+    fragmentShader:`
+      uniform vec3 uColor;
+      varying float vAlpha;
+      void main(){
+        float d=length(gl_PointCoord-0.5)*2.0;
+        float s=1.0-smoothstep(0.0,1.0,d);
+        s*=s;
+        gl_FragColor=vec4(uColor,s*vAlpha);
       }
-    }
-  );
-});
+    `,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  scene.add(new THREE.Points(starGeo, starMat));
 
-/* ----------------------------------------------------------
-   12. ORBITAL ANIMATION GLOW PULSE (Intelligence section)
-   Extra pulsing glow on the central orb tied to scroll depth
-   ---------------------------------------------------------- */
-ScrollTrigger.create({
-  trigger: '#intelligence',
-  start: 'top center',
-  onEnter: () => {
-    gsap.to('.center-orb', {
-      scale: 1.2,
-      duration: 0.6,
-      ease: 'back.out(1.7)',
-      yoyo: true,
-      repeat: 1,
+  // ── CELESTIAL CLOUDS (volumetric planes) ──
+  function makeCloud(x,y,z,scaleX,scaleY,opacity){
+    const geo = new THREE.PlaneGeometry(1,1,1,1);
+    const mat = new THREE.ShaderMaterial({
+      uniforms:{
+        uTime:{value:0},
+        uOpacity:{value:opacity},
+        uColor:{value:new THREE.Color(0x4466aa)}
+      },
+      vertexShader:`
+        varying vec2 vUv;
+        void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}
+      `,
+      fragmentShader:`
+        uniform float uTime;uniform float uOpacity;uniform vec3 uColor;
+        varying vec2 vUv;
+        float noise(vec2 p){
+          vec2 i=floor(p);vec2 f=fract(p);
+          f=f*f*(3.0-2.0*f);
+          float a=fract(sin(dot(i,vec2(127.1,311.7)))*43758.5453);
+          float b=fract(sin(dot(i+vec2(1,0),vec2(127.1,311.7)))*43758.5453);
+          float c=fract(sin(dot(i+vec2(0,1),vec2(127.1,311.7)))*43758.5453);
+          float d=fract(sin(dot(i+vec2(1,1),vec2(127.1,311.7)))*43758.5453);
+          return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
+        }
+        void main(){
+          vec2 uv=vUv;
+          float n=noise(uv*3.0+vec2(uTime*0.03,uTime*0.02));
+          n+=0.5*noise(uv*6.0+vec2(uTime*0.05,-uTime*0.04));
+          n+=0.25*noise(uv*12.0+vec2(-uTime*0.07,uTime*0.06));
+          n=clamp(n,0.0,1.0);
+          float edge=smoothstep(0.0,0.32,uv.x)*smoothstep(1.0,0.68,uv.x)
+                    *smoothstep(0.0,0.28,uv.y)*smoothstep(1.0,0.72,uv.y);
+          float a=n*edge*uOpacity*(0.7+0.3*sin(uTime*0.4+uv.x*3.0));
+          gl_FragColor=vec4(uColor*1.2,a);
+        }
+      `,
+      transparent:true,depthWrite:false,
+      blending:THREE.AdditiveBlending,side:THREE.DoubleSide
     });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x,y,z);
+    mesh.scale.set(scaleX,scaleY,1);
+    mesh.rotation.z = Math.random()*0.3-0.15;
+    scene.add(mesh);
+    return mesh;
   }
-});
 
+  const clouds = [
+    makeCloud(-60, 20,-80,220,80,0.14),
+    makeCloud( 50,-15,-120,280,100,0.12),
+    makeCloud(-20, 40,-100,200,70,0.1),
+    makeCloud( 70, 10,-90,240,85,0.11),
+    makeCloud(-80,-20,-110,260,95,0.09),
+    makeCloud(  0,-30,-150,300,110,0.08),
+  ];
+
+  // ── GOLDEN ATMOSPHERIC GLOW ──
+  const glowGeo = new THREE.PlaneGeometry(2000, 200);
+  const glowMat = new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0}},
+    vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      uniform float uTime;varying vec2 vUv;
+      void main(){
+        float grad=smoothstep(0.0,1.0,vUv.y)*(1.0-smoothstep(0.5,1.0,vUv.y));
+        float pulse=0.03+0.01*sin(uTime*0.5);
+        gl_FragColor=vec4(0.83,0.66,0.26,grad*pulse);
+      }
+    `,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+  glowMesh.position.set(0,-80,-200);
+  scene.add(glowMesh);
+
+  // ── FLOATING CELESTIAL PARTICLES ──
+  const fpGeo = new THREE.BufferGeometry();
+  const fpCount = 600;
+  const fpPos = new Float32Array(fpCount*3);
+  const fpVel = new Float32Array(fpCount*3);
+  for(let i=0;i<fpCount;i++){
+    fpPos[i*3]   = (Math.random()-0.5)*300;
+    fpPos[i*3+1] = (Math.random()-0.5)*300;
+    fpPos[i*3+2] = (Math.random()-0.5)*200-50;
+    fpVel[i*3]   = (Math.random()-0.5)*0.02;
+    fpVel[i*3+1] = Math.random()*0.04+0.01;
+    fpVel[i*3+2] = (Math.random()-0.5)*0.01;
+  }
+  fpGeo.setAttribute('position', new THREE.BufferAttribute(fpPos,3));
+  const fpMat = new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0}},
+    vertexShader:`
+      uniform float uTime;
+      varying float vA;
+      void main(){
+        vec3 p=position;
+        vA=0.3+0.7*abs(sin(uTime*0.6+p.x*0.1+p.y*0.08));
+        gl_PointSize=1.8+1.2*vA;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);
+      }
+    `,
+    fragmentShader:`
+      varying float vA;
+      void main(){
+        float d=length(gl_PointCoord-0.5)*2.0;
+        float s=1.0-smoothstep(0.0,1.0,d);
+        gl_FragColor=vec4(0.94,0.79,0.43,s*vA*0.75);
+      }
+    `,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  const fpPoints = new THREE.Points(fpGeo,fpMat);
+  scene.add(fpPoints);
+
+  // ── SACRED GEOMETRY — FLOATING RING STRUCTURE ──
+  function makeRingGeometry(r,tube,segs){
+    const geo = new THREE.TorusGeometry(r,tube,16,segs);
+    const mat = new THREE.ShaderMaterial({
+      uniforms:{uTime:{value:0},uColor:{value:new THREE.Color(0xd4a843)}},
+      vertexShader:`
+        varying vec3 vPos;
+        void main(){vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}
+      `,
+      fragmentShader:`
+        uniform float uTime;uniform vec3 uColor;varying vec3 vPos;
+        void main(){
+          float t=0.6+0.4*sin(uTime*0.8+vPos.x*0.2+vPos.y*0.15);
+          gl_FragColor=vec4(uColor,t*0.5);
+        }
+      `,
+      transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide
+    });
+    return new THREE.Mesh(geo,mat);
+  }
+
+  const ring1 = makeRingGeometry(45,0.25,80);
+  ring1.position.set(0,15,-120);
+  ring1.rotation.x = 1.2;
+  scene.add(ring1);
+
+  const ring2 = makeRingGeometry(32,0.18,64);
+  ring2.position.set(0,15,-120);
+  ring2.rotation.x = 0.8;
+  ring2.rotation.y = 0.5;
+  scene.add(ring2);
+
+  // Mouse influence
+  const mouse = {x:0,y:0};
+  const targetCam = {x:0,y:0};
+  document.addEventListener('mousemove',e=>{
+    mouse.x = (e.clientX/window.innerWidth - 0.5) * 2;
+    mouse.y = (e.clientY/window.innerHeight - 0.5) * 2;
+  });
+
+  // Scroll influence
+  let scrollY = 0;
+  window.addEventListener('scroll',()=>{ scrollY = window.scrollY; });
+
+  window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  });
+
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.008;
+
+    // Update uniforms
+    starMat.uniforms.uTime.value = t;
+    glowMat.uniforms.uTime.value = t;
+    fpMat.uniforms.uTime.value = t;
+    ring1.material.uniforms.uTime.value = t;
+    ring2.material.uniforms.uTime.value = t;
+    clouds.forEach(c=>c.material.uniforms.uTime.value = t);
+
+    // Animate floating particles
+    const fp = fpGeo.attributes.position.array;
+    for(let i=0;i<fpCount;i++){
+      fp[i*3]   += fpVel[i*3];
+      fp[i*3+1] += fpVel[i*3+1];
+      fp[i*3+2] += fpVel[i*3+2];
+      if(fp[i*3+1] > 160){ fp[i*3+1]=-160; fp[i*3]=(Math.random()-0.5)*300; }
+    }
+    fpGeo.attributes.position.needsUpdate = true;
+
+    // Rotate rings gently
+    ring1.rotation.z = t * 0.15;
+    ring2.rotation.z = -t * 0.22;
+    ring1.rotation.y = t * 0.08;
+
+    // Camera: gentle breathing + mouse parallax + scroll
+    targetCam.x += (mouse.x * 6 - targetCam.x) * 0.04;
+    targetCam.y += (-mouse.y * 4 - targetCam.y) * 0.04;
+    camera.position.x = targetCam.x + Math.sin(t*0.3)*1.5;
+    camera.position.y = targetCam.y + Math.cos(t*0.2)*1.0 - scrollY*0.012;
+    camera.position.z = 80 + Math.sin(t*0.15)*3;
+    camera.lookAt(0, -scrollY*0.012, 0);
+
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+
+// ── 2D PARTICLE OVERLAY ───────────────────────────────
+(function initParticles(){
+  const canvas = document.getElementById('overlay-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+
+  const particles = Array.from({length:140},()=>({
+    x:Math.random()*window.innerWidth,
+    y:Math.random()*window.innerHeight,
+    size:Math.random()*1.8+0.4,
+    vy:-(Math.random()*0.35+0.08),
+    vx:(Math.random()-0.5)*0.15,
+    opacity:Math.random()*0.7+0.1,
+    od:(Math.random()-0.5)*0.006,
+  }));
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.opacity+=p.od;
+      if(p.opacity>.95||p.opacity<.08) p.od*=-1;
+      p.y+=p.vy; p.x+=p.vx;
+      if(p.y<-8){p.y=canvas.height+8;p.x=Math.random()*canvas.width;}
+      ctx.save();
+      ctx.globalAlpha=p.opacity*0.55;
+      ctx.fillStyle='#d4a843';
+      ctx.shadowBlur=5;ctx.shadowColor='#d4a843';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── SCROLL REVEAL ─────────────────────────────────────
+(function initReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('in');
+    });
+  },{threshold:0.18});
+  els.forEach(el=>obs.observe(el));
+
+  // Animate metric bars when stability section appears
+  const barObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.m-fill').forEach(bar=>{
+          bar.style.width = bar.getAttribute('data-width');
+        });
+      }
+    });
+  },{threshold:0.25});
+  const stability = document.getElementById('realm-stability');
+  if(stability) barObs.observe(stability);
+  // init bars at 0
+  document.querySelectorAll('.m-fill').forEach(b=>b.style.width='0%');
+})();
+
+// ── NAV ORBS ─────────────────────────────────────────
+(function initNav(){
+  const orbs = document.querySelectorAll('.nav-orb');
+  const sections = ['realm-arrival','realm-systems','realm-intelligence','realm-stability','realm-ascension'];
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = sections.indexOf(e.target.id);
+        if(idx>=0) orbs.forEach((o,i)=>o.classList.toggle('active',i===idx));
+      }
+    });
+  },{threshold:0.4});
+  sections.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+  orbs.forEach((orb,i)=>orb.addEventListener('click',()=>{
+    document.getElementById(sections[i])?.scrollIntoView({behavior:'smooth'});
+  }));
+})();
+
+// ── GATE ─────────────────────────────────────────────
+function openGate(){
+  ['gate-light','gate-frame','gate-arch','gate-col-l','gate-col-r','gate-interior','gate-rays']
+    .forEach(id=>document.getElementById(id)?.classList.add('open'));
+  // Doors need open added alongside their existing classes
+  document.getElementById('gate-left')?.classList.add('open');
+  document.getElementById('gate-right')?.classList.add('open');
+  const btn = document.getElementById('gate-btn');
+  if(btn) btn.classList.add('hidden');
+}
+
+// ── AUDIO ─────────────────────────────────────────────
+(function initAudio(){
+  let ctx=null, nodes=[], on=false;
+  const btn=document.getElementById('audio-btn');
+  if(!btn)return;
+
+  function start(){
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const master=ctx.createGain(); master.gain.value=0.055; master.connect(ctx.destination);
+
+    // Reverb impulse using convolver
+    const convLen=ctx.sampleRate*2.5;
+    const convBuf=ctx.createBuffer(2,convLen,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=convBuf.getChannelData(c);for(let i=0;i<convLen;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/convLen,2.5);}
+    const conv=ctx.createConvolver(); conv.buffer=convBuf;
+    const wetGain=ctx.createGain(); wetGain.gain.value=0.4;
+    conv.connect(wetGain); wetGain.connect(master);
+
+    [[110,.12],[165,.08],[220,.07],[330,.05],[440,.04],[550,.03],[660,.025]].forEach(([f,v],i)=>{
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f+(i%2?.28:-.28);
+      const g=ctx.createGain(); g.gain.value=0;
+      g.gain.linearRampToValueAtTime(v,ctx.currentTime+3+i*0.7);
+      o.connect(g); g.connect(master); g.connect(conv); o.start();
+      nodes.push(o,g);
+    });
+
+    // Shimmer
+    const s=ctx.createOscillator(); s.type='sine'; s.frequency.value=880;
+    const sg=ctx.createGain(); sg.gain.value=0;
+    sg.gain.linearRampToValueAtTime(0.015,ctx.currentTime+5);
+    s.connect(sg); sg.connect(master); s.start();
+    nodes.push(s,sg);
+  }
+
+  function stop(){
+    nodes.forEach(n=>{try{n.stop?.();}catch(_){}n.disconnect?.();});
+    nodes=[];ctx?.close();ctx=null;
+  }
+
+  btn.addEventListener('click',()=>{
+    on=!on;
+    if(on){start();btn.textContent='◉ Sound On';}
+    else{stop();btn.textContent='◎ Sound Off';}
+  });
+})();
 </script>
 </body>
 </html>
